@@ -1,0 +1,11 @@
+Copyright 2013 52°North Initiative for Geospatial Open Source Software GmbH
+
+Licensed under GNU General Public License, v2.0
+
+This project includes:
+  JCL 1.1.1 implemented over SLF4J under MIT License
+  Log4j Implemented Over SLF4J under Apache Software Licenses
+  Logback Classic Module under Eclipse Public License - v 1.0 or GNU Lesser General Public License
+  Logback Core Module under Eclipse Public License - v 1.0 or GNU Lesser General Public License
+  SLF4J API Module under MIT License
+
