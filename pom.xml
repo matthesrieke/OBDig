@@ -3,55 +3,30 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>com.github.matthesrieke</groupId>
-	<artifactId>ses-instance-tester</artifactId>
+	<groupId>org.envirocar</groupId>
+	<artifactId>OBDig</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
-	<name>SES Instance Tester</name>
-	<inceptionYear>2013</inceptionYear>
+	<name>OBDig - java OBD-II connector</name>
+	<inceptionYear>2015</inceptionYear>
 
 	<licenses>
 		<license>
-			<name>Apache License, Version 2.0</name>
-			<url>http://www.apache.org/licenses/LICENSE-2.0</url>
+			<name>GNU General Public License, v2.0</name>
+			<url>http://www.gnu.de/documents/gpl-2.0.en.html</url>
 		</license>
 	</licenses>
 
 	<properties>
-		<guice-version>3.0</guice-version>
-		<slf4j-version>1.7.5</slf4j-version>
+		<slf4j-version>1.7.9</slf4j-version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
 	<dependencies>
 		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>servlet-api</artifactId>
-			<version>2.5</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.httpcomponents</groupId>
-			<artifactId>httpclient</artifactId>
-			<version>4.2.1</version>
-		</dependency>
-		<dependency>
-			<groupId>com.google.inject</groupId>
-			<artifactId>guice</artifactId>
-			<version>${guice-version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.google.inject.extensions</groupId>
-			<artifactId>guice-multibindings</artifactId>
-			<version>${guice-version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.google.inject.extensions</groupId>
-			<artifactId>guice-servlet</artifactId>
-			<version>${guice-version}</version>
-		</dependency>
-		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
 			<version>1.0.11</version>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
@@ -62,31 +37,30 @@
 			<groupId>org.slf4j</groupId>
 			<artifactId>log4j-over-slf4j</artifactId>
 			<version>${slf4j-version}</version>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>jcl-over-slf4j</artifactId>
 			<version>${slf4j-version}</version>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>jul-to-slf4j</artifactId>
 			<version>${slf4j-version}</version>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 
 	<build>
 		<plugins>
 			<plugin>
-				<artifactId>maven-war-plugin</artifactId>
-				<version>2.3</version>
-			</plugin>
-			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>2.5.1</version>
 				<configuration>
-					<source>1.7</source>
-					<target>1.7</target>
+					<source>1.6</source>
+					<target>1.6</target>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -94,11 +68,14 @@
 				<artifactId>maven-license-plugin</artifactId>
 				<version>1.9.0</version>
 				<configuration>
-					<header>src/main/config/license_header.txt</header>
+					<header>misc/52N_license-header.txt</header>
 					<aggregate>true</aggregate>
 					<includes>
 						<include>**/*.java</include>
 					</includes>
+					<excludes>
+						<exclude>**/Base64.java</exclude>
+					</excludes>
 					<properties>
 						<year>${project.inceptionYear}</year>
 					</properties>
