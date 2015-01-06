@@ -401,6 +401,7 @@ public class OBDCommandLooper {
 		
 		if (this.obdAdapter != null) {
 			this.requestPeriod = this.obdAdapter.getPreferredRequestPeriod();
+			this.obdAdapter.startExecutions(commandExecutionHandler);
 		}
 	}
 

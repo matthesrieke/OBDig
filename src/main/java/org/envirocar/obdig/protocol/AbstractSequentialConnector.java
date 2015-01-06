@@ -67,6 +67,7 @@ import org.envirocar.obdig.commands.PIDUtil.PID;
 import org.envirocar.obdig.protocol.exception.AdapterFailedException;
 import org.envirocar.obdig.protocol.exception.ConnectionLostException;
 import org.envirocar.obdig.protocol.exception.UnmatchedCommandResponseException;
+import org.envirocar.obdig.protocol.executor.CommandExecutor;
 import org.envirocar.obdig.util.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -552,6 +553,10 @@ public abstract class AbstractSequentialConnector implements OBDConnector {
 			
 		}
 		
+	}
+	
+	@Override
+	public void startExecutions(CommandExecutor exec) {
 	}
 	
 	@Override

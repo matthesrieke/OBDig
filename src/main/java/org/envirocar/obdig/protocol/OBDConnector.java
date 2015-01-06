@@ -36,6 +36,7 @@ import org.envirocar.obdig.commands.CommonCommand;
 import org.envirocar.obdig.protocol.exception.AdapterFailedException;
 import org.envirocar.obdig.protocol.exception.ConnectionLostException;
 import org.envirocar.obdig.protocol.exception.UnmatchedCommandResponseException;
+import org.envirocar.obdig.protocol.executor.CommandExecutor;
 
 /**
  * Interface for a OBD connector. It can provide device specific
@@ -141,6 +142,13 @@ public interface OBDConnector {
 	 * @return the time in ms the looper should wait between executing the command batch
 	 */
 	public long getPreferredRequestPeriod();
+
+	/**
+	 * an implementation shall initiate the retrieval of OBD data and
+	 * continue doing so until {@link #shutdown()} has been called.
+	 * @param exec the executor instance to process the OBD data
+	 */
+	public void startExecutions(CommandExecutor exec);
 
 
 }

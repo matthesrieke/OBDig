@@ -55,8 +55,9 @@ public class AsynchronousResponseThread {
 	private int globalIndex;
 	private ResponseParser responseParser;
 
-	public AsynchronousResponseThread(final InputStream in, ResponseParser responseParser) {
+	public AsynchronousResponseThread(final InputStream in, ResponseParser responseParser, CommandExecutor executor) {
 //		super("AsynchronousResponseThread");
+		this.handler = executor;
 		this.inputStream = in;
 		
 		this.responseParser = responseParser;
@@ -79,6 +80,7 @@ public class AsynchronousResponseThread {
 						
 					} catch (IOException e) {
 						logger.warn(e.getMessage(), e);
+						running = false;
 						break;
 					}
 				}
@@ -151,6 +153,7 @@ public class AsynchronousResponseThread {
 	public void shutdown() {
 		logger.info("SHUTDOWN!");
 		running = false;
+		this.handler.removeCallbacks(readInputStreamRunnable);
 	}
 
 	public boolean isRunning() {
@@ -158,14 +161,8 @@ public class AsynchronousResponseThread {
 	}
 
 	public void start() {
-		// TODO Auto-generated method stub
-		
+		this.handler.post(readInputStreamRunnable);
 	}
 
-	public void join() throws InterruptedException {
-		// TODO Auto-generated method stub
-		
-	}
-	
 	
 }

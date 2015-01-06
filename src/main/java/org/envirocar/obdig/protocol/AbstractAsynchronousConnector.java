@@ -36,6 +36,7 @@ import java.util.List;
 import org.envirocar.obdig.commands.CommonCommand;
 import org.envirocar.obdig.protocol.exception.AdapterFailedException;
 import org.envirocar.obdig.protocol.exception.ConnectionLostException;
+import org.envirocar.obdig.protocol.executor.CommandExecutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,6 +46,7 @@ public abstract class AbstractAsynchronousConnector implements OBDConnector {
 	private InputStream inputStream;
 	private OutputStream outputStream;
 	private AsynchronousResponseThread responseThread;
+	private CommandExecutor executor;
 
 	protected abstract List<CommonCommand> getRequestCommands();
 
@@ -56,13 +58,20 @@ public abstract class AbstractAsynchronousConnector implements OBDConnector {
 	
 	protected abstract long getSleepTimeBetweenCommands();
 	
+	public AbstractAsynchronousConnector() {
+	}
+	
+	@Override
+	public void startExecutions(CommandExecutor exec) {
+		this.executor = exec;
+		startResponseThread();		
+	}
+	
 	@Override
 	public void provideStreamObjects(InputStream inputStream,
 			OutputStream outputStream) {
 		this.inputStream = inputStream;
 		this.outputStream = outputStream;
-		
-		startResponseThread();
 	}
 	
 	@Override
@@ -128,17 +137,13 @@ public abstract class AbstractAsynchronousConnector implements OBDConnector {
 	@Override
 	public void shutdown() {
 		if (responseThread != null) {
-			try {
-				responseThread.join();
-			} catch (InterruptedException e) {
-				logger.warn(e.getMessage(), e);
-			}
+			responseThread.shutdown();
 		}		
 	}
 	
 	protected void startResponseThread() {
 		if (responseThread == null || !responseThread.isRunning()) {
-			responseThread = new AsynchronousResponseThread(inputStream, getResponseParser());
+			responseThread = new AsynchronousResponseThread(inputStream, getResponseParser(), this.executor);
 			responseThread.start();
 		}
 	}
