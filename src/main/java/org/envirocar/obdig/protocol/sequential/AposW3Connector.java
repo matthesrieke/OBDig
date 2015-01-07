@@ -1,6 +1,5 @@
 /**
- * Copyright (C) 2014 - 2015 52°North Initiative for Geospatial Open Source
- * Software GmbH
+ * Copyright (C) 2014 - 2015 the enviroCar development team (envirocar.org)
  *
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License version 2 as publishedby the Free
