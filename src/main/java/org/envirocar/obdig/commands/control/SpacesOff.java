@@ -25,40 +25,26 @@
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
  * PARTICULAR PURPOSE. See the GNU General Public License for more details.
  */
-package org.envirocar.obdig.commands;
+package org.envirocar.obdig.commands.control;
 
-import org.envirocar.obdig.commands.PIDUtil.PID;
+import org.envirocar.obdig.commands.StringResultCommand;
+
 
 /**
- * EngineLoad Value on PID 01 04
- * 
- * @author jakob
- * 
+ * This command will turn-off echo.
  */
-public class EngineLoad extends NumberResultCommand {
-
-	private float value = Float.NaN;
+public class SpacesOff extends StringResultCommand {
 
 	/**
-	 * Create the Command
+	 * @param command
 	 */
-	public EngineLoad() {
-		super("01 ".concat(PID.CALCULATED_ENGINE_LOAD.toString()));
+	public SpacesOff() {
+		super("AT S0");
 	}
 
 	@Override
 	public String getCommandName() {
-		return "Engine Load";
-	}
-
-
-	@Override
-	public Number getNumberResult() {
-		if (Float.isNaN(value)) {
-			int[] buffer = getBuffer();
-			value = (buffer[2] * 100.0f) / 255.0f;
-		}
-		return value;
+		return "Spaces Off";
 	}
 
 }

@@ -25,25 +25,35 @@
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
  * PARTICULAR PURPOSE. See the GNU General Public License for more details.
  */
-package org.envirocar.obdig.commands;
+package org.envirocar.obdig.commands.numeric;
 
+public class O2LambdaProbeCurrent extends O2LambdaProbe {
 
-/**
- * Select the protocol to use.
- */
-public class SelectAutoProtocol extends StringResultCommand {
-
-	/**
-	 * @param command
-	 */
-	public SelectAutoProtocol() {
-		super("AT SP " + 0);
+	private double current = Double.NaN;
+	
+	public O2LambdaProbeCurrent(String cylinderPosition) {
+		super(cylinderPosition);
 	}
 
-
+	public double getCurrent() {
+		if (Double.isNaN(current)) {
+			int[] data = getBuffer();
+			
+			this.current = ((data[4]*256d)+data[5])/256d - 128;
+		}
+		
+		return current;
+	}
+	
 	@Override
-	public String getCommandName() {
-		return "Protocol: Auto";
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append(getClass().getSimpleName());
+		sb.append(" Current: ");
+		sb.append(getCurrent());
+		sb.append("; Equivalence Ratio: ");
+		sb.append(getEquivalenceRatio());
+		return sb.toString();
 	}
 
 }

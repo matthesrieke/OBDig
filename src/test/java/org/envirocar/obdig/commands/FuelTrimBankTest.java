@@ -27,8 +27,8 @@
  */
 package org.envirocar.obdig.commands;
 
-import org.envirocar.obdig.commands.LongTermTrimBank1;
-import org.envirocar.obdig.commands.ShortTermTrimBank1;
+import org.envirocar.obdig.commands.numeric.LongTermTrimBank1;
+import org.envirocar.obdig.commands.numeric.ShortTermTrimBank1;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -37,9 +37,7 @@ public class FuelTrimBankTest {
 	@Test
 	public void testShortTermParsing() {
 		ShortTermTrimBank1 st = new ShortTermTrimBank1();
-		st.setRawData(createShortTermData());
-		
-		st.parseRawData();
+		st.parseRawData(createShortTermData());
 		
 		Number result = st.getNumberResult();
 		
@@ -53,9 +51,7 @@ public class FuelTrimBankTest {
 	@Test
 	public void testLongTermParsing() {
 		LongTermTrimBank1 lt = new LongTermTrimBank1();
-		lt.setRawData(createLongTermData());
-		
-		lt.parseRawData();
+		lt.parseRawData(createLongTermData());
 		
 		Number result = lt.getNumberResult();
 		

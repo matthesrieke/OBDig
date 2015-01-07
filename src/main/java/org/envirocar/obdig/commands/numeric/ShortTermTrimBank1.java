@@ -25,40 +25,38 @@
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
  * PARTICULAR PURPOSE. See the GNU General Public License for more details.
  */
-package org.envirocar.obdig.commands;
+package org.envirocar.obdig.commands.numeric;
 
-import org.envirocar.obdig.commands.PIDUtil.PID;
+import org.envirocar.obdig.commands.NumberResultCommand;
 
 /**
- * Engine RPM on PID 01 0C
+ * Short Term Trim (Cylinder) Bank 1, PID 01 06
  * 
  * @author jakob
  * 
  */
-public class RPM extends NumberResultCommand {
+public class ShortTermTrimBank1 extends NumberResultCommand {
 
-	public static final String NAME = "Engine RPM";
-	private int rpm = Short.MIN_VALUE;
+	private double fuelTrimValue = Double.NaN;
 
-	public RPM() {
-		super("01 ".concat(PID.RPM.toString()));
+	public ShortTermTrimBank1() {
+		super("01 06");
 	}
 
 
 	@Override
 	public String getCommandName() {
-		return NAME;
+
+		return "Short Term Fuel Trim Bank 1";
 	}
 
 	@Override
 	public Number getNumberResult() {
-		if (rpm == Short.MIN_VALUE) {
+		if (Double.isNaN(fuelTrimValue)) {
 			int[] buffer = getBuffer();
-			int bytethree = buffer[2];
-			int bytefour = buffer[3];
-			rpm = (bytethree * 256 + bytefour) / 4;
+			fuelTrimValue =  (buffer[2] - 128) * (100d / 128d);
 		}
-		return rpm;
+		return fuelTrimValue;
 	}
 
 }

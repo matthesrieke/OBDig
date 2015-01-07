@@ -25,30 +25,40 @@
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
  * PARTICULAR PURPOSE. See the GNU General Public License for more details.
  */
-package org.envirocar.obdig.commands;
+package org.envirocar.obdig.commands.numeric;
 
+import org.envirocar.obdig.commands.NumberResultCommand;
 import org.envirocar.obdig.commands.PIDUtil.PID;
 
-public class FuelPressure extends NumberResultCommand {
+/**
+ * Intake Manifold Pressure on PID 01 0B
+ * 
+ * @author jakob
+ * 
+ */
 
-	public static final String NAME = "Fuel Pressure";
+public class IntakePressure extends NumberResultCommand {
+
+	public static final String NAME = "Intake Manifold Pressure";
 	private int pressure = Short.MIN_VALUE;
-	
-	public FuelPressure() {
-		super("01 ".concat(PID.FUEL_PRESSURE.toString()));
-	}
 
-	@Override
-	public Number getNumberResult() {
-		if (pressure == Short.MIN_VALUE) {
-			pressure = getBuffer()[2] * 3;
-		}
-		return pressure;
+	public IntakePressure() {
+		super("01 ".concat(PID.INTAKE_MAP.toString()));
 	}
 
 	@Override
 	public String getCommandName() {
 		return NAME;
+	}
+
+
+	@Override
+	public Number getNumberResult() {
+		if (pressure == Short.MIN_VALUE) {
+			int[] buffer = getBuffer();
+			pressure = buffer[2];
+		}
+		return pressure;
 	}
 
 }

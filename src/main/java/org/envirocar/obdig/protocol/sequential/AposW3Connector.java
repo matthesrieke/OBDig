@@ -31,12 +31,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.envirocar.obdig.commands.CommonCommand;
-import org.envirocar.obdig.commands.EchoOff;
-import org.envirocar.obdig.commands.LineFeedOff;
-import org.envirocar.obdig.commands.ObdReset;
-import org.envirocar.obdig.commands.SelectAutoProtocol;
 import org.envirocar.obdig.commands.StringResultCommand;
-import org.envirocar.obdig.commands.Timeout;
+import org.envirocar.obdig.commands.control.EchoOff;
+import org.envirocar.obdig.commands.control.LineFeedOff;
+import org.envirocar.obdig.commands.control.ObdReset;
+import org.envirocar.obdig.commands.control.SelectAutoProtocol;
+import org.envirocar.obdig.commands.control.Timeout;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

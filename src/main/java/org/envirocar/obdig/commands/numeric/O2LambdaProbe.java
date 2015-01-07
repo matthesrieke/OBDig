@@ -25,8 +25,9 @@
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
  * PARTICULAR PURPOSE. See the GNU General Public License for more details.
  */
-package org.envirocar.obdig.commands;
+package org.envirocar.obdig.commands.numeric;
 
+import org.envirocar.obdig.commands.NumberResultCommand;
 import org.envirocar.obdig.commands.PIDUtil.PID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -93,8 +94,8 @@ public abstract class O2LambdaProbe extends NumberResultCommand {
 	}
 	
 	@Override
-	public void parseRawData() {
-		super.parseRawData();
+	public void parseRawData(byte[] data) {
+		super.parseRawData(data);
 		if (getBuffer() == null || getBuffer().length < 6) {
 			setCommandState(CommonCommandState.EXECUTION_ERROR);
 			logger.warn("The response did not contain the correct expected count: "+

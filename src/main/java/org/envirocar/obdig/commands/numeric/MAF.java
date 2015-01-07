@@ -25,36 +25,52 @@
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
  * PARTICULAR PURPOSE. See the GNU General Public License for more details.
  */
-package org.envirocar.obdig.commands;
+package org.envirocar.obdig.commands.numeric;
 
+import org.envirocar.obdig.commands.NumberResultCommand;
 import org.envirocar.obdig.commands.PIDUtil.PID;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- * Throttle position on PID 01 11
+ * Mass Air Flow Value PID 01 10
  * 
  * @author jakob
  * 
  */
-public class TPS extends NumberResultCommand {
-
-	private int value = Short.MIN_VALUE;
-
-	public TPS() {
-		super("01 ".concat(PID.TPS.toString()));
+public class MAF extends NumberResultCommand {
+	
+	private static final Logger logger = LoggerFactory.getLogger(MAF.class);
+	public static final String NAME = "Mass Air Flow";
+	private float maf = Float.NaN;
+	
+	public MAF() {
+		super("01 ".concat(PID.MAF.toString()));
 	}
+
 
 	@Override
 	public String getCommandName() {
-		return "Throttle Position";
+		return NAME;
 	}
 
 	@Override
 	public Number getNumberResult() {
-		if (value == Short.MIN_VALUE) {
+		if (Float.isNaN(maf)) {
 			int[] buffer = getBuffer();
-			value = (buffer[2] * 100) / 255;
-		}
-		return value;
-	}
+			try {
+				if (getCommandState() != CommonCommandState.EXECUTION_ERROR) {
+					int bytethree = buffer[2];
+					int bytefour = buffer[3];
+					maf = (bytethree * 256 + bytefour) / 100.0f;
+				}
+			} catch (IndexOutOfBoundsException ioobe){
+				logger.warn("Get wrong result of the obd adapter");
+			} catch (Exception e) {
+				logger.warn("Error while creating the mass air flow value", e);
+			}
 
+		}
+		return maf;
+	}
 }

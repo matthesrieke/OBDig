@@ -108,7 +108,7 @@ public class OBDCommandLooper {
 				if (!userRequestedStop) {
 					connectionListener.requestConnectionRetry(e);
 				}
-				logger.info("Exiting commandHandler.");
+				logger.info("Exiting commandHandler due to exception: "+e.getMessage(), e);
 				throw new LooperStoppedException();
 			}
 			
@@ -117,6 +117,9 @@ public class OBDCommandLooper {
 				throw new LooperStoppedException();
 			}
 			
+			/*
+			 * post self again to the executor with the defined delay
+			 */
 			commandExecutionHandler.postDelayed(commonCommandsRunnable, requestPeriod);
 		}
 	};
@@ -153,10 +156,10 @@ public class OBDCommandLooper {
 					if (!userRequestedStop) {
 						connectionListener.requestConnectionRetry(e);
 					}
-					logger.info("Exiting commandHandler.");
+					logger.info("Exiting commandHandler due to exception: "+e.getMessage(), e);
 					throw new LooperStoppedException();
 				} catch (AdapterFailedException e) {
-					logger.warn(e.getMessage());
+					logger.warn(e.getMessage(), e);
 				}
 				
 				/*
@@ -173,6 +176,9 @@ public class OBDCommandLooper {
 					throw new LooperStoppedException();
 				}
 				
+				/*
+				 * no connection has been established, try again after the defined period
+				 */
 				commandExecutionHandler.postDelayed(initializationCommandsRunnable, ADAPTER_TRY_PERIOD);
 			}
 			
@@ -194,7 +200,6 @@ public class OBDCommandLooper {
 	 * @param outputMutex 
 	 * @param l the listener which receives command responses
 	 * @param cl the connection listener which receives connection state changes
-	 * @param priority thread priority
 	 * @throws IllegalArgumentException if one of the inputs equals null
 	 */
 	public OBDCommandLooper(InputStream in, OutputStream out,
@@ -218,6 +223,12 @@ public class OBDCommandLooper {
 		
 	}
 	
+	/**
+	 * Try to guess the best matching {@link OBDConnector} instance
+	 * using the devices name.
+	 * 
+	 * @param deviceName the device name
+	 */
 	private void determinePreferredAdapter(String deviceName) {
 		for (OBDConnector ac : adapterCandidates) {
 			if (ac.supportsDevice(deviceName)) {
@@ -253,6 +264,12 @@ public class OBDCommandLooper {
 		}
 	}
 
+	/**
+	 * wrapper method to failsafely execute the init commands
+	 * 
+	 * @throws IOException
+	 * @throws AdapterFailedException
+	 */
 	private void executeInitializationRequests() throws IOException, AdapterFailedException {
 		try {
 			this.obdAdapter.executeInitializationCommands();
@@ -266,6 +283,16 @@ public class OBDCommandLooper {
 		
 	}
 
+	/**
+	 * execute all commands in a sequential manner. Note that
+	 * a asynchronous connector might also require to send
+	 * a command to the device (e.g. an "still alive" command).
+	 * 
+	 * This methods catches exceptions on connection loss and tries
+	 * to reconnect and switch phases automatically.
+	 * 
+	 * @throws IOException
+	 */
 	private void executeCommandRequests() throws IOException {
 		
 		List<CommonCommand> cmds;
@@ -281,6 +308,10 @@ public class OBDCommandLooper {
 		}
 		
 		long time = 0;
+		/*
+		 * only forward those command to the listener that
+		 * have been processed succesfully
+		 */
 		for (CommonCommand cmd : cmds) {
 			if (cmd.getCommandState() == CommonCommandState.FINISHED) {
 				commandListener.receiveUpdate(cmd);
@@ -295,12 +326,20 @@ public class OBDCommandLooper {
 	}
 
 	
+	/**
+	 * switch between phases ({@link Phase}).
+	 * 
+	 * @param phase
+	 * @param reason
+	 */
 	private void switchPhase(Phase phase, IOException reason) {
 		logger.info("Switching to Phase: " +phase + (reason != null ? " / Reason: "+reason.getMessage() : ""));
 		
-		
 		int phaseCount = phaseCountMap.get(phase).incrementAndGet();
 		
+		/*
+		 * remove all callbacks from the executor
+		 */
 		commandExecutionHandler.removeCallbacks(initializationCommandsRunnable);
 		commandExecutionHandler.removeCallbacks(commonCommandsRunnable);
 		
@@ -331,6 +370,9 @@ public class OBDCommandLooper {
 			commandExecutionHandler.postDelayed(commonCommandsRunnable, requestPeriod);
 			commandListener.onConnected(deviceName);
 			
+			/*
+			 * start monitoring the connection and received data
+			 */
 			startMonitoring();
 			
 			break;
@@ -374,7 +416,6 @@ public class OBDCommandLooper {
 	private void selectAdapter() throws AllAdaptersFailedException {
 		if (this.obdAdapter == null) {
 			determinePreferredAdapter(deviceName);
-			this.obdAdapter.provideStreamObjects(inputStream, outputStream);
 		}
 		
 		else if (++tries >= this.obdAdapter.getMaximumTriesForInitialization()) {
@@ -395,12 +436,12 @@ public class OBDCommandLooper {
 			}
 			
 			this.obdAdapter = adapterCandidates.get(adapterIndex++ % adapterCandidates.size());
-			this.obdAdapter.provideStreamObjects(inputStream, outputStream);
 			tries = 0;
 		}
 		
 		if (this.obdAdapter != null) {
 			this.requestPeriod = this.obdAdapter.getPreferredRequestPeriod();
+			this.obdAdapter.provideStreamObjects(inputStream, outputStream);
 			this.obdAdapter.startExecutions(commandExecutionHandler);
 		}
 	}
@@ -421,10 +462,12 @@ public class OBDCommandLooper {
 				
 				if (!running) return;
 				
+				/*
+				 * check if we received data in the MAX_NODATA_TIME window
+				 */
 				if (System.currentTimeMillis() - lastSuccessfulCommandTime > MAX_NODATA_TIME) {
 					commandExecutionHandler.removeCallbacks(commonCommandsRunnable);
 					commandExecutionHandler.shutdownExecutions();
-//					commandExecutionHandler.getLooper().quit();
 					
 					if (OBDCommandLooper.this.obdAdapter != null) {
 						OBDCommandLooper.this.obdAdapter.shutdown();
@@ -443,21 +486,4 @@ public class OBDCommandLooper {
 		switchPhase(Phase.INITIALIZATION, null);
 	}
 	
-//	@Override
-//	public void run() {
-//		Looper.prepare();
-//		logger.info("Command loop started. Hash:"+this.hashCode());
-//		commandExecutionHandler = new Handler();
-//		switchPhase(Phase.INITIALIZATION, null);
-//		try {
-//			Looper.loop();
-//		} catch (LooperStoppedException e) {
-//			logger.info("Command loop stopped. Hash:"+this.hashCode());
-//		}
-//		
-//		if (this.obdAdapter != null) {
-//			this.obdAdapter.shutdown();
-//		}
-//	}
-
 }

@@ -29,6 +29,8 @@ package org.envirocar.obdig.commands;
 
 public abstract class StringResultCommand extends CommonCommand {
 
+	private byte[] rawData;
+
 	/**
 	 * @param command the command to send. This will be the raw data send to the OBD device
 	 * (if a sub-class does not override {@link #getOutgoingBytes()}).
@@ -38,12 +40,18 @@ public abstract class StringResultCommand extends CommonCommand {
 	}
 	
 	@Override
-	public void parseRawData() {
+	public void parseRawData(byte[] data) {
+		this.rawData = data;
 		setCommandState(CommonCommandState.FINISHED);
 	}
 	
 	public String getStringResult() {
 		return new String(getRawData());
+	}
+	
+	@Override
+	public byte[] getRawData() {
+		return this.rawData;
 	}
 
 }

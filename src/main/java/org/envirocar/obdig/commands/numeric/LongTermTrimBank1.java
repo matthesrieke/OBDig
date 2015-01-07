@@ -25,37 +25,38 @@
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
  * PARTICULAR PURPOSE. See the GNU General Public License for more details.
  */
-package org.envirocar.obdig.commands;
+package org.envirocar.obdig.commands.numeric;
 
-import org.envirocar.obdig.commands.PIDUtil.PID;
+import org.envirocar.obdig.commands.NumberResultCommand;
 
 /**
- * Intake temperature on PID 01 0F
+ * Long Term Fuel Trim (Cylinder) Bank 1 (PID 01 07)
  * 
  * @author jakob
  * 
  */
-public class IntakeTemperature extends NumberResultCommand {
+public class LongTermTrimBank1 extends NumberResultCommand {
 
-	public static final String NAME = "Air Intake Temperature";
-	private int temperature = Short.MIN_VALUE;
+	private double perc = Double.NaN;
 
-	public IntakeTemperature() {
-		super("01 ".concat(PID.INTAKE_AIR_TEMP.toString()));
+	public LongTermTrimBank1() {
+		super("01 07");
 	}
 
 	@Override
 	public String getCommandName() {
-		return NAME;
+
+		return "Long Term Fuel Trim Bank 1";
 	}
 
 	@Override
 	public Number getNumberResult() {
-		if (temperature == Short.MIN_VALUE) {
+		if (Double.isNaN(perc)) {
 			int[] buffer = getBuffer();
-			temperature = buffer[2] - 40;
+			int tmpValue = buffer[2];
+			perc = (tmpValue - 128) * (100d / 128d);
 		}
-		return temperature;
+		return perc;
 	}
 
 }

@@ -25,27 +25,27 @@
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
  * PARTICULAR PURPOSE. See the GNU General Public License for more details.
  */
-package org.envirocar.obdig.commands;
+package org.envirocar.obdig.commands.control;
+
+import org.envirocar.obdig.commands.StringResultCommand;
 
 
 /**
- * This method will reset the OBD connection.
+ * Turns off line-feed.
  */
-public class ObdReset extends StringResultCommand {
+public class EnableHeaders extends StringResultCommand {
 
-	public ObdReset() {
-		super("AT Z");
-	}
-
-	@Override
-	public boolean awaitsResults() {
-		return false;
+	/**
+	 * @param command
+	 */
+	public EnableHeaders() {
+		super("AT H1");
 	}
 
 
 	@Override
 	public String getCommandName() {
-		return "Reset OBD";
+		return "Enable Headers";
 	}
 
 }

@@ -27,6 +27,17 @@
  */
 package org.envirocar.obdig.commands;
 
+import org.envirocar.obdig.commands.numeric.EngineLoad;
+import org.envirocar.obdig.commands.numeric.FuelPressure;
+import org.envirocar.obdig.commands.numeric.IntakePressure;
+import org.envirocar.obdig.commands.numeric.IntakeTemperature;
+import org.envirocar.obdig.commands.numeric.MAF;
+import org.envirocar.obdig.commands.numeric.O2LambdaProbe;
+import org.envirocar.obdig.commands.numeric.RPM;
+import org.envirocar.obdig.commands.numeric.Speed;
+import org.envirocar.obdig.commands.numeric.TPS;
+import org.envirocar.obdig.commands.raw.FuelSystemStatus;
+
 public class PIDUtil {
 
 	public enum PID {

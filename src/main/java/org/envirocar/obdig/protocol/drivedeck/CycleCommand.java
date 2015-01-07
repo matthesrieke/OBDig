@@ -131,7 +131,7 @@ public class CycleCommand extends CommonCommand {
 	}
 
 	@Override
-	public void parseRawData() {
+	public void parseRawData(byte[] data) {
 		
 	}
 
@@ -142,6 +142,11 @@ public class CycleCommand extends CommonCommand {
 	
 	public byte[] getOutgoingBytes() {
 		return bytes;
+	}
+
+	@Override
+	public byte[] getRawData() {
+		return null;
 	}
 
 }

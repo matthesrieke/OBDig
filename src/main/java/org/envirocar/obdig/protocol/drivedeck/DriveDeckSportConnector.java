@@ -35,14 +35,14 @@ import java.util.Locale;
 import java.util.Set;
 
 import org.envirocar.obdig.commands.CommonCommand;
-import org.envirocar.obdig.commands.IntakePressure;
-import org.envirocar.obdig.commands.IntakeTemperature;
-import org.envirocar.obdig.commands.MAF;
-import org.envirocar.obdig.commands.O2LambdaProbe;
-import org.envirocar.obdig.commands.PIDSupported;
-import org.envirocar.obdig.commands.RPM;
-import org.envirocar.obdig.commands.Speed;
 import org.envirocar.obdig.commands.CommonCommand.CommonCommandState;
+import org.envirocar.obdig.commands.numeric.IntakePressure;
+import org.envirocar.obdig.commands.numeric.IntakeTemperature;
+import org.envirocar.obdig.commands.numeric.MAF;
+import org.envirocar.obdig.commands.numeric.O2LambdaProbe;
+import org.envirocar.obdig.commands.numeric.RPM;
+import org.envirocar.obdig.commands.numeric.Speed;
+import org.envirocar.obdig.commands.raw.PIDSupported;
 import org.envirocar.obdig.protocol.AbstractAsynchronousConnector;
 import org.envirocar.obdig.protocol.ResponseParser;
 import org.envirocar.obdig.protocol.drivedeck.CycleCommand.PID;
@@ -118,8 +118,7 @@ public class DriveDeckSportConnector extends AbstractAsynchronousConnector {
 				rawBytes[target++] = (byte) hexTmp.charAt(1);
 			}
 			
-			pidCmd.setRawData(rawBytes);
-			pidCmd.parseRawData();
+			pidCmd.parseRawData(rawBytes);
 			
 			if (pidCmd.getCommandState() == CommonCommandState.FINISHED) {
 				logger.info(pidCmd.getSupportedPIDs().toArray().toString());
@@ -240,8 +239,7 @@ public class DriveDeckSportConnector extends AbstractAsynchronousConnector {
 		
 		if (result != null) {
 			byte[] rawData = createRawData(rawBytes, result.getResponseTypeID());
-			result.setRawData(rawData);
-			result.parseRawData();
+			result.parseRawData(rawData);
 			
 			if (result.getCommandState() == CommonCommandState.EXECUTION_ERROR ||
 					result.getCommandState() == CommonCommandState.SEARCHING) {

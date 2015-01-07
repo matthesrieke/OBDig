@@ -25,25 +25,31 @@
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
  * PARTICULAR PURPOSE. See the GNU General Public License for more details.
  */
-package org.envirocar.obdig.commands;
+package org.envirocar.obdig.commands.numeric;
 
+import org.envirocar.obdig.commands.NumberResultCommand;
+import org.envirocar.obdig.commands.PIDUtil.PID;
 
-/**
- * Turns off line-feed.
- */
-public class Defaults extends StringResultCommand {
+public class FuelPressure extends NumberResultCommand {
 
-	/**
-	 * @param command
-	 */
-	public Defaults() {
-		super("AT D");
+	public static final String NAME = "Fuel Pressure";
+	private int pressure = Short.MIN_VALUE;
+	
+	public FuelPressure() {
+		super("01 ".concat(PID.FUEL_PRESSURE.toString()));
 	}
 
+	@Override
+	public Number getNumberResult() {
+		if (pressure == Short.MIN_VALUE) {
+			pressure = getBuffer()[2] * 3;
+		}
+		return pressure;
+	}
 
 	@Override
 	public String getCommandName() {
-		return "Defaults";
+		return NAME;
 	}
 
 }

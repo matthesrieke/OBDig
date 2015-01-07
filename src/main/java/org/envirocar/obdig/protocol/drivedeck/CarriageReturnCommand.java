@@ -38,7 +38,7 @@ public class CarriageReturnCommand extends CommonCommand {
 	}
 
 	@Override
-	public void parseRawData() {
+	public void parseRawData(byte[] data) {
 		
 	}
 
@@ -50,6 +50,11 @@ public class CarriageReturnCommand extends CommonCommand {
 	@Override
 	public byte[] getOutgoingBytes() {
 		return new byte[0];
+	}
+
+	@Override
+	public byte[] getRawData() {
+		return null;
 	}
 
 

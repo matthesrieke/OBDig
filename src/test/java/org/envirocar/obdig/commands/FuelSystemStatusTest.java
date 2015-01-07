@@ -27,9 +27,9 @@
  */
 package org.envirocar.obdig.commands;
 
-import org.envirocar.obdig.commands.FuelSystemStatus;
 import org.envirocar.obdig.commands.PIDUtil;
 import org.envirocar.obdig.commands.PIDUtil.PID;
+import org.envirocar.obdig.commands.raw.FuelSystemStatus;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -39,15 +39,13 @@ public class FuelSystemStatusTest {
 	public void testCommandParsing() {
 		FuelSystemStatus cmd = (FuelSystemStatus) PIDUtil.instantiateCommand(PID.FUEL_SYSTEM_STATUS.toString());
 		
-		cmd.setRawData(createRawDataOpenLoop());
-		cmd.parseRawData();
+		cmd.parseRawData(createRawDataOpenLoop());
 		
 		Assert.assertTrue("Expected to be in open loop.", !cmd.isInClosedLoop());
 		
 		cmd = (FuelSystemStatus) PIDUtil.instantiateCommand(PID.FUEL_SYSTEM_STATUS.toString());
 		
-		cmd.setRawData(createRawDataClosedLoop(cmd));
-		cmd.parseRawData();
+		cmd.parseRawData(createRawDataClosedLoop(cmd));
 		
 		Assert.assertTrue("Expected to be in closed loop.", cmd.isInClosedLoop());
 	}

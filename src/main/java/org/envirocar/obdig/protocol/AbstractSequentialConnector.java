@@ -49,21 +49,21 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.envirocar.obdig.FeatureFlags;
 import org.envirocar.obdig.commands.CommonCommand;
-import org.envirocar.obdig.commands.EngineLoad;
-import org.envirocar.obdig.commands.FuelSystemStatus;
-import org.envirocar.obdig.commands.IntakePressure;
-import org.envirocar.obdig.commands.IntakeTemperature;
-import org.envirocar.obdig.commands.LongTermTrimBank1;
-import org.envirocar.obdig.commands.MAF;
-import org.envirocar.obdig.commands.O2LambdaProbe;
-import org.envirocar.obdig.commands.PIDSupported;
 import org.envirocar.obdig.commands.PIDUtil;
-import org.envirocar.obdig.commands.RPM;
-import org.envirocar.obdig.commands.ShortTermTrimBank1;
-import org.envirocar.obdig.commands.Speed;
-import org.envirocar.obdig.commands.TPS;
 import org.envirocar.obdig.commands.CommonCommand.CommonCommandState;
 import org.envirocar.obdig.commands.PIDUtil.PID;
+import org.envirocar.obdig.commands.numeric.EngineLoad;
+import org.envirocar.obdig.commands.numeric.IntakePressure;
+import org.envirocar.obdig.commands.numeric.IntakeTemperature;
+import org.envirocar.obdig.commands.numeric.LongTermTrimBank1;
+import org.envirocar.obdig.commands.numeric.MAF;
+import org.envirocar.obdig.commands.numeric.O2LambdaProbe;
+import org.envirocar.obdig.commands.numeric.RPM;
+import org.envirocar.obdig.commands.numeric.ShortTermTrimBank1;
+import org.envirocar.obdig.commands.numeric.Speed;
+import org.envirocar.obdig.commands.numeric.TPS;
+import org.envirocar.obdig.commands.raw.FuelSystemStatus;
+import org.envirocar.obdig.commands.raw.PIDSupported;
 import org.envirocar.obdig.protocol.exception.AdapterFailedException;
 import org.envirocar.obdig.protocol.exception.ConnectionLostException;
 import org.envirocar.obdig.protocol.exception.UnmatchedCommandResponseException;
@@ -223,7 +223,38 @@ public abstract class AbstractSequentialConnector implements OBDConnector {
 		processInitializationCommand(cmd);
 	}
 	
+	private void onBlacklistCandidate(CommonCommand cmd) {
+		String name = cmd.getCommandName();
+		
+		if (blacklistedCommandNames.contains(name)) return;
+		
+		/*
+		 * whiteliste, basically for testing via user study
+		 */
+		if (whitelistedCommandNames.contains(name)) return;
+		
+		AtomicInteger candidate = blacklistCandidates.get(name);
+		
+		if (candidate != null) {
+			int count = candidate.incrementAndGet();
+			if (count > MIN_BACKLIST_COUNT) {
+				logger.info("Blacklisting command: "+name);
+				blacklistedCommandNames.add(name);
+			}
+		}
+		else {
+			blacklistCandidates.put(name, new AtomicInteger(0));
+		}
+	}
+	
 
+	/**
+	 * "Run" the provided command. This includes sending (writing bytes to stream)
+	 * and reading and parsing the response stream.
+	 * 
+	 * @param cmd
+	 * @throws IOException
+	 */
 	private void runCommand(CommonCommand cmd)
 			throws IOException {
 		logger.debug("Sending command " +cmd.getCommandName()+ " / "+ new String(cmd.getOutgoingBytes()));
@@ -249,29 +280,6 @@ public abstract class AbstractSequentialConnector implements OBDConnector {
 		}
 	}
 	
-	private void onBlacklistCandidate(CommonCommand cmd) {
-		String name = cmd.getCommandName();
-		
-		if (blacklistedCommandNames.contains(name)) return;
-		
-		/*
-		 * whiteliste, basically for testing via user study
-		 */
-		if (whitelistedCommandNames.contains(name)) return;
-		
-		AtomicInteger candidate = blacklistCandidates.get(name);
-		
-		if (candidate != null) {
-			int count = candidate.incrementAndGet();
-			if (count > MIN_BACKLIST_COUNT) {
-				logger.info("Blacklisting command: "+name);
-				blacklistedCommandNames.add(name);
-			}
-		}
-		else {
-			blacklistCandidates.put(name, new AtomicInteger(0));
-		}
-	}
 	
 	/**
 	 * Sends the OBD-II request.
@@ -324,16 +332,15 @@ public abstract class AbstractSequentialConnector implements OBDConnector {
 	}
 	
 	/**
-	 * Reads the OBD-II response.
+	 * Reads the OBD-II response and parse it afterwards.
 	 * @param cmd 
 	 */
 	private void readResult(CommonCommand cmd) throws IOException {
 		byte[] rawData = readResponseLine(cmd);
-		cmd.setRawData(rawData);
 		cmd.setResultTime(System.currentTimeMillis());
 
 		// read string each two chars
-		cmd.parseRawData();
+		cmd.parseRawData(rawData);
 	}
 
 	private byte[] readResponseLine(CommonCommand cmd) throws IOException {
@@ -484,7 +491,9 @@ public abstract class AbstractSequentialConnector implements OBDConnector {
 		try {
 			if (cmd.getCommandState().equals(CommonCommandState.NEW)) {
 
-				// Run the job
+				/*
+				 * a command with state NEW shall be run (= bytes written to the stream).
+				 */
 				cmd.setCommandState(CommonCommandState.RUNNING);
 				runCommand(cmd);
 			}

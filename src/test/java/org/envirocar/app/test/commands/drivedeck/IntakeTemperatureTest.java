@@ -28,7 +28,7 @@
 package org.envirocar.app.test.commands.drivedeck;
 
 import org.envirocar.obdig.commands.CommonCommand;
-import org.envirocar.obdig.commands.IntakeTemperature;
+import org.envirocar.obdig.commands.numeric.IntakeTemperature;
 import org.envirocar.obdig.protocol.ResponseParser;
 import org.junit.Assert;
 import org.junit.Test;

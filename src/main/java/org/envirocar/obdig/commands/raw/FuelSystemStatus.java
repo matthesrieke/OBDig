@@ -25,29 +25,30 @@
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
  * PARTICULAR PURPOSE. See the GNU General Public License for more details.
  */
-package org.envirocar.obdig.commands;
+package org.envirocar.obdig.commands.raw;
 
+import org.envirocar.obdig.commands.CommonCommand;
 import org.envirocar.obdig.commands.PIDUtil.PID;
 
 public class FuelSystemStatus extends CommonCommand {
 
 	public static final String NAME = "Fuel System Status";
 	private int setBit;
+	private byte[] rawData;
 
 	public FuelSystemStatus() {
 		super("01 ".concat(PID.FUEL_SYSTEM_STATUS.toString()));
 	}
 
 	@Override
-	public void parseRawData() {
+	public void parseRawData(byte[] data) {
+		this.rawData = data;
 		/*
 		 * big try catch as it is not robustly tested
 		 */
 		try {
 			int index = 0;
 			int length = 2;
-			byte[] data = getRawData();
-			
 			
 			if (data.length != 6 && data.length != 8) {
 				setCommandState(CommonCommandState.EXECUTION_ERROR);
@@ -58,7 +59,7 @@ public class FuelSystemStatus extends CommonCommand {
 				if (index == 0) {
 					
 					// this is the status
-					if (!tmp.equals(NumberResultCommand.STATUS_OK)) {
+					if (!tmp.equals(STATUS_OK)) {
 						setCommandState(CommonCommandState.EXECUTION_ERROR);
 						return;
 					}
@@ -143,6 +144,11 @@ public class FuelSystemStatus extends CommonCommand {
 	
 	public int getStatus() {
 		return setBit;
+	}
+	
+	@Override
+	public byte[] getRawData() {
+		return this.rawData;
 	}
 
 }

@@ -44,20 +44,19 @@ public abstract class CommonCommand {
 	public static final char COMMAND_RECEIVE_END = '>';
 	public static final char COMMAND_RECEIVE_SPACE = ' ';
 	
+	public static final String STATUS_OK = "41";
+	
 	static {
 		ignoredChars = new HashSet<Character>();
 		ignoredChars.add(COMMAND_RECEIVE_SPACE);
 		ignoredChars.add(COMMAND_SEND_END);
 	}
 	
-	private byte[] rawData = null;
 	private String command = null;
 	private Long commandId;
 	private CommonCommandState commandState;
 	private String responseTypeId;
 	private long resultTime;
-	
-
 
 	/**
 	 * Default constructor to use
@@ -98,7 +97,7 @@ public abstract class CommonCommand {
 		return true;
 	}
 
-	public abstract void parseRawData();
+	public abstract void parseRawData(byte[] raw);
 
 
 	/**
@@ -154,10 +153,6 @@ public abstract class CommonCommand {
 		return command.getBytes();
 	}
 
-	public void setRawData(byte[] rawData) {
-		this.rawData = rawData;
-	}
-
 	public char getEndOfLineReceive() {
 		return COMMAND_RECEIVE_END;
 	}
@@ -174,9 +169,7 @@ public abstract class CommonCommand {
 		return true;
 	}
 
-	public byte[] getRawData() {
-		return this.rawData;
-	}
+	public abstract byte[] getRawData();
 
 	public Set<Character> getIgnoredChars() {
 		return ignoredChars;

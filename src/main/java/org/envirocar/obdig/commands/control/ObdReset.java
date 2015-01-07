@@ -25,39 +25,29 @@
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
  * PARTICULAR PURPOSE. See the GNU General Public License for more details.
  */
-package org.envirocar.obdig.commands;
+package org.envirocar.obdig.commands.control;
 
-import org.envirocar.obdig.commands.PIDUtil.PID;
+import org.envirocar.obdig.commands.StringResultCommand;
+
 
 /**
- * Intake Manifold Pressure on PID 01 0B
- * 
- * @author jakob
- * 
+ * This method will reset the OBD connection.
  */
+public class ObdReset extends StringResultCommand {
 
-public class IntakePressure extends NumberResultCommand {
-
-	public static final String NAME = "Intake Manifold Pressure";
-	private int pressure = Short.MIN_VALUE;
-
-	public IntakePressure() {
-		super("01 ".concat(PID.INTAKE_MAP.toString()));
+	public ObdReset() {
+		super("AT Z");
 	}
+
+	@Override
+	public boolean awaitsResults() {
+		return false;
+	}
+
 
 	@Override
 	public String getCommandName() {
-		return NAME;
-	}
-
-
-	@Override
-	public Number getNumberResult() {
-		if (pressure == Short.MIN_VALUE) {
-			int[] buffer = getBuffer();
-			pressure = buffer[2];
-		}
-		return pressure;
+		return "Reset OBD";
 	}
 
 }

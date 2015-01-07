@@ -29,11 +29,11 @@ package org.envirocar.obdig.commands;
 
 import java.math.BigDecimal;
 
-import org.envirocar.obdig.commands.O2LambdaProbe;
-import org.envirocar.obdig.commands.O2LambdaProbeCurrent;
-import org.envirocar.obdig.commands.O2LambdaProbeVoltage;
 import org.envirocar.obdig.commands.PIDUtil;
 import org.envirocar.obdig.commands.PIDUtil.PID;
+import org.envirocar.obdig.commands.numeric.O2LambdaProbe;
+import org.envirocar.obdig.commands.numeric.O2LambdaProbeCurrent;
+import org.envirocar.obdig.commands.numeric.O2LambdaProbeVoltage;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -43,28 +43,26 @@ public class O2LambdaProbeTest {
 	public void testVoltageParsing() {
 		O2LambdaProbeVoltage cmd = (O2LambdaProbeVoltage) PIDUtil.instantiateCommand(PID.O2_LAMBDA_PROBE_1_VOLTAGE);
 		
-		cmd.setRawData(createDataVoltage());
-		cmd.parseRawData();
+		cmd.parseRawData(createDataVoltage());
 		
 		BigDecimal er = BigDecimal.valueOf(cmd.getEquivalenceRatio()).setScale(2, BigDecimal.ROUND_HALF_UP);
 		Assert.assertTrue("Expected equivalence ration of 1.52.", er.doubleValue() == 1.52);
 		
 		BigDecimal v = BigDecimal.valueOf(cmd.getVoltage()).setScale(2, BigDecimal.ROUND_HALF_UP);
-		Assert.assertTrue("Expected voltage of 7.5.", v.doubleValue() == 6.08);
+		Assert.assertTrue("Expected voltage of 6.08.", v.doubleValue() == 6.08);
 	}
 	
 	@Test
 	public void testCurrentParsing() {
 		O2LambdaProbeCurrent cmd = (O2LambdaProbeCurrent) O2LambdaProbe.fromPIDEnum(PID.O2_LAMBDA_PROBE_1_CURRENT);
 		
-		cmd.setRawData(createDataCurrent());
-		cmd.parseRawData();
+		cmd.parseRawData(createDataCurrent());
 		
 		BigDecimal er = BigDecimal.valueOf(cmd.getEquivalenceRatio()).setScale(2, BigDecimal.ROUND_HALF_UP);
 		Assert.assertTrue("Expected equivalence ration of 1.52.", er.doubleValue() == 1.52);
 		
 		BigDecimal c = BigDecimal.valueOf(cmd.getCurrent()).setScale(2, BigDecimal.ROUND_HALF_UP);
-		Assert.assertTrue("Expected current of 128.", c.doubleValue() == 2.5);
+		Assert.assertTrue("Expected current of 2.5.", c.doubleValue() == 2.5);
 	}
 
 	private byte[] createDataCurrent() {

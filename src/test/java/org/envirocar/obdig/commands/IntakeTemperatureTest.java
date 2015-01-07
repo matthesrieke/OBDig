@@ -29,7 +29,7 @@ package org.envirocar.obdig.commands;
 
 
 import org.envirocar.obdig.commands.CommonCommand.CommonCommandState;
-import org.envirocar.obdig.commands.IntakeTemperature;
+import org.envirocar.obdig.commands.numeric.IntakeTemperature;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -39,8 +39,7 @@ public class IntakeTemperatureTest {
 	public void testParsing() {
 		byte[] bytes = createBytes();
 		IntakeTemperature cmd = new IntakeTemperature();
-		cmd.setRawData(bytes);
-		cmd.parseRawData();
+		cmd.parseRawData(bytes);
 		
 		Assert.assertTrue(cmd.getCommandState() == CommonCommandState.FINISHED);
 		

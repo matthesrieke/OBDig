@@ -25,25 +25,35 @@
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
  * PARTICULAR PURPOSE. See the GNU General Public License for more details.
  */
-package org.envirocar.obdig.commands;
+package org.envirocar.obdig.commands.numeric;
 
+public class O2LambdaProbeVoltage extends O2LambdaProbe {
 
-/**
- * Turns off line-feed.
- */
-public class EnableHeaders extends StringResultCommand {
+	private double voltage = Double.NaN;
 
-	/**
-	 * @param command
-	 */
-	public EnableHeaders() {
-		super("AT H1");
+	public O2LambdaProbeVoltage(String cylinderPos) {
+		super(cylinderPos);
 	}
-
-
+	
+	public double getVoltage() {
+		if (Double.isNaN(this.voltage)) {
+			int[] data = getBuffer();
+			
+			this.voltage = ((data[4]*256d)+data[5])/8192d;
+		}
+		
+		return voltage;
+	}
+	
 	@Override
-	public String getCommandName() {
-		return "Enable Headers";
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append(getClass().getSimpleName());
+		sb.append(" Voltage: ");
+		sb.append(getVoltage());
+		sb.append("; Equivalence Ratio: ");
+		sb.append(getEquivalenceRatio());
+		return sb.toString();
 	}
-
+	
 }

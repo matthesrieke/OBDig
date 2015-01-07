@@ -25,35 +25,38 @@
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
  * PARTICULAR PURPOSE. See the GNU General Public License for more details.
  */
-package org.envirocar.obdig.commands;
+package org.envirocar.obdig.commands.numeric;
 
-public class O2LambdaProbeCurrent extends O2LambdaProbe {
+import org.envirocar.obdig.commands.NumberResultCommand;
+import org.envirocar.obdig.commands.PIDUtil.PID;
 
-	private double current = Double.NaN;
-	
-	public O2LambdaProbeCurrent(String cylinderPosition) {
-		super(cylinderPosition);
+/**
+ * Intake temperature on PID 01 0F
+ * 
+ * @author jakob
+ * 
+ */
+public class IntakeTemperature extends NumberResultCommand {
+
+	public static final String NAME = "Air Intake Temperature";
+	private int temperature = Short.MIN_VALUE;
+
+	public IntakeTemperature() {
+		super("01 ".concat(PID.INTAKE_AIR_TEMP.toString()));
 	}
 
-	public double getCurrent() {
-		if (Double.isNaN(current)) {
-			int[] data = getBuffer();
-			
-			this.current = ((data[4]*256d)+data[5])/256d - 128;
-		}
-		
-		return current;
-	}
-	
 	@Override
-	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		sb.append(getClass().getSimpleName());
-		sb.append(" Current: ");
-		sb.append(getCurrent());
-		sb.append("; Equivalence Ratio: ");
-		sb.append(getEquivalenceRatio());
-		return sb.toString();
+	public String getCommandName() {
+		return NAME;
+	}
+
+	@Override
+	public Number getNumberResult() {
+		if (temperature == Short.MIN_VALUE) {
+			int[] buffer = getBuffer();
+			temperature = buffer[2] - 40;
+		}
+		return temperature;
 	}
 
 }

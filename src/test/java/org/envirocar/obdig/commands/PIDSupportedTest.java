@@ -33,9 +33,9 @@ import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
 
-import org.envirocar.obdig.commands.PIDSupported;
 import org.envirocar.obdig.commands.CommonCommand.CommonCommandState;
 import org.envirocar.obdig.commands.PIDUtil.PID;
+import org.envirocar.obdig.commands.raw.PIDSupported;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -45,8 +45,7 @@ public class PIDSupportedTest {
 	public void testPIDSupportedParsing() {
 		PIDSupported cmd = new PIDSupported();
 		
-		cmd.setRawData(createResponseMockup());
-		cmd.parseRawData();
+		cmd.parseRawData(createResponseMockup());
 		
 		Set<PID> result = cmd.getSupportedPIDs();
 		
@@ -57,8 +56,7 @@ public class PIDSupportedTest {
 	public void testPIDSupportedFail() {
 		PIDSupported cmd = new PIDSupported();
 		
-		cmd.setRawData(createResponseFailMockup());
-		cmd.parseRawData();
+		cmd.parseRawData(createResponseFailMockup());
 		
 		assertTrue(cmd.getCommandState() == CommonCommandState.EXECUTION_ERROR);
 	}

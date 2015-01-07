@@ -25,36 +25,39 @@
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
  * PARTICULAR PURPOSE. See the GNU General Public License for more details.
  */
-package org.envirocar.obdig.commands;
+package org.envirocar.obdig.commands.numeric;
+
+import org.envirocar.obdig.commands.NumberResultCommand;
+import org.envirocar.obdig.commands.PIDUtil.PID;
 
 /**
- * Short Term Trim (Cylinder) Bank 1, PID 01 06
+ * Speed Command PID 01 0D
  * 
  * @author jakob
  * 
  */
-public class ShortTermTrimBank1 extends NumberResultCommand {
+public class Speed extends NumberResultCommand {
 
-	private double fuelTrimValue = Double.NaN;
+	public static final String NAME = "Vehicle Speed";
+	private int metricSpeed = Short.MIN_VALUE;
 
-	public ShortTermTrimBank1() {
-		super("01 06");
+	public Speed() {
+		super("01 ".concat(PID.SPEED.toString()));
 	}
 
 
 	@Override
 	public String getCommandName() {
-
-		return "Short Term Fuel Trim Bank 1";
+		return NAME;
 	}
 
 	@Override
 	public Number getNumberResult() {
-		if (Double.isNaN(fuelTrimValue)) {
-			int[] buffer = getBuffer();
-			fuelTrimValue =  (buffer[2] - 128) * (100d / 128d);
+		int[] buffer = getBuffer();
+		if (metricSpeed == Short.MIN_VALUE) {
+			metricSpeed = buffer[2];
 		}
-		return fuelTrimValue;
+		return metricSpeed;
 	}
 
 }

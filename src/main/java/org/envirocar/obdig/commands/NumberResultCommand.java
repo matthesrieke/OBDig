@@ -36,6 +36,7 @@ public abstract class NumberResultCommand extends CommonCommand {
 	static final String STATUS_OK = "41";
 	
 	private int[] buffr;
+	private byte[] rawData;
 	
 	/**
 	 * @param command the command to send. This will be the raw data send to the OBD device
@@ -46,11 +47,10 @@ public abstract class NumberResultCommand extends CommonCommand {
 	}
 
 	@Override
-	public void parseRawData() {
-		
+	public void parseRawData(byte[] data) {
+		this.rawData = data;
 		int index = 0;
 		int length = 2;
-		byte[] data = getRawData();
 		
 		String dataString = new String(data);
 
@@ -108,6 +108,11 @@ public abstract class NumberResultCommand extends CommonCommand {
 	
 	private boolean isNoDataCommand(String dataString) {
 		return dataString == null || dataString.contains(NODATA);
+	}
+	
+	@Override
+	public byte[] getRawData() {
+		return this.rawData;
 	}
 	
 }

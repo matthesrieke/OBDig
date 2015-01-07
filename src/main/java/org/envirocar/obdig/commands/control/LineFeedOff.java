@@ -25,38 +25,26 @@
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
  * PARTICULAR PURPOSE. See the GNU General Public License for more details.
  */
-package org.envirocar.obdig.commands;
+package org.envirocar.obdig.commands.control;
 
-import org.envirocar.obdig.commands.PIDUtil.PID;
+import org.envirocar.obdig.commands.StringResultCommand;
+
 
 /**
- * Speed Command PID 01 0D
- * 
- * @author jakob
- * 
+ * Turns off line-feed.
  */
-public class Speed extends NumberResultCommand {
+public class LineFeedOff extends StringResultCommand {
 
-	public static final String NAME = "Vehicle Speed";
-	private int metricSpeed = Short.MIN_VALUE;
-
-	public Speed() {
-		super("01 ".concat(PID.SPEED.toString()));
+	/**
+	 * @param command
+	 */
+	public LineFeedOff() {
+		super("AT L0");
 	}
-
 
 	@Override
 	public String getCommandName() {
-		return NAME;
-	}
-
-	@Override
-	public Number getNumberResult() {
-		int[] buffer = getBuffer();
-		if (metricSpeed == Short.MIN_VALUE) {
-			metricSpeed = buffer[2];
-		}
-		return metricSpeed;
+		return "Line Feed Off";
 	}
 
 }

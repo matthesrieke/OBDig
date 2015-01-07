@@ -25,24 +25,41 @@
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
  * PARTICULAR PURPOSE. See the GNU General Public License for more details.
  */
-package org.envirocar.obdig.commands;
+package org.envirocar.obdig.commands.numeric;
 
+import org.envirocar.obdig.commands.NumberResultCommand;
+import org.envirocar.obdig.commands.PIDUtil.PID;
 
 /**
- * Turns off line-feed.
+ * Engine RPM on PID 01 0C
+ * 
+ * @author jakob
+ * 
  */
-public class LineFeedOff extends StringResultCommand {
+public class RPM extends NumberResultCommand {
 
-	/**
-	 * @param command
-	 */
-	public LineFeedOff() {
-		super("AT L0");
+	public static final String NAME = "Engine RPM";
+	private int rpm = Short.MIN_VALUE;
+
+	public RPM() {
+		super("01 ".concat(PID.RPM.toString()));
 	}
+
 
 	@Override
 	public String getCommandName() {
-		return "Line Feed Off";
+		return NAME;
+	}
+
+	@Override
+	public Number getNumberResult() {
+		if (rpm == Short.MIN_VALUE) {
+			int[] buffer = getBuffer();
+			int bytethree = buffer[2];
+			int bytefour = buffer[3];
+			rpm = (bytethree * 256 + bytefour) / 4;
+		}
+		return rpm;
 	}
 
 }

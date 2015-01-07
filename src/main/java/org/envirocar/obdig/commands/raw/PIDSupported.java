@@ -25,12 +25,14 @@
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
  * PARTICULAR PURPOSE. See the GNU General Public License for more details.
  */
-package org.envirocar.obdig.commands;
+package org.envirocar.obdig.commands.raw;
 
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.envirocar.obdig.commands.CommonCommand;
+import org.envirocar.obdig.commands.PIDUtil;
 import org.envirocar.obdig.commands.PIDUtil.PID;
 
 
@@ -42,6 +44,7 @@ public class PIDSupported extends CommonCommand {
 	private Set<PID> pids;
 	private byte[] bytes;
 	private String group;
+	private byte[] rawData;
 
 	public PIDSupported() {
 		this("00");
@@ -100,13 +103,12 @@ public class PIDSupported extends CommonCommand {
 
 
 	@Override
-	public void parseRawData() {
+	public void parseRawData(byte[] raw) {
+		this.rawData = raw;
 		int index = 0;
 		int length = 2;
 
-		preprocessRawData();
-		
-		byte[] data = getRawData();
+		byte[] data = preprocessRawData(raw);
 		
 		bytes = new byte[data.length-4];
 		
@@ -119,7 +121,7 @@ public class PIDSupported extends CommonCommand {
 			if (index == 0) {
 				String tmp = new String(data, index, length);
 				// this is the status
-				if (!tmp.equals(NumberResultCommand.STATUS_OK)) {
+				if (!tmp.equals(STATUS_OK)) {
 					setCommandState(CommonCommandState.EXECUTION_ERROR);
 					return;
 				}
@@ -152,13 +154,18 @@ public class PIDSupported extends CommonCommand {
 	}
 
 
-	private void preprocessRawData() {
-		byte[] data = getRawData();
+	private byte[] preprocessRawData(byte[] data) {
 		String str = new String(data);
 		if (str.contains("4100")) {
 			int index = str.indexOf("4100");
-			setRawData(Arrays.copyOfRange(data, index, data.length));
+			return Arrays.copyOfRange(data, index, data.length);
 		}
+		return data;
+	}
+	
+	@Override
+	public byte[] getRawData() {
+		return this.rawData;
 	}
 
 }

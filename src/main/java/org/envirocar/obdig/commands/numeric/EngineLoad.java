@@ -25,36 +25,41 @@
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
  * PARTICULAR PURPOSE. See the GNU General Public License for more details.
  */
-package org.envirocar.obdig.commands;
+package org.envirocar.obdig.commands.numeric;
+
+import org.envirocar.obdig.commands.NumberResultCommand;
+import org.envirocar.obdig.commands.PIDUtil.PID;
 
 /**
- * Long Term Fuel Trim (Cylinder) Bank 1 (PID 01 07)
+ * EngineLoad Value on PID 01 04
  * 
  * @author jakob
  * 
  */
-public class LongTermTrimBank1 extends NumberResultCommand {
+public class EngineLoad extends NumberResultCommand {
 
-	private double perc = Double.NaN;
+	private float value = Float.NaN;
 
-	public LongTermTrimBank1() {
-		super("01 07");
+	/**
+	 * Create the Command
+	 */
+	public EngineLoad() {
+		super("01 ".concat(PID.CALCULATED_ENGINE_LOAD.toString()));
 	}
 
 	@Override
 	public String getCommandName() {
-
-		return "Long Term Fuel Trim Bank 1";
+		return "Engine Load";
 	}
+
 
 	@Override
 	public Number getNumberResult() {
-		if (Double.isNaN(perc)) {
+		if (Float.isNaN(value)) {
 			int[] buffer = getBuffer();
-			int tmpValue = buffer[2];
-			perc = (tmpValue - 128) * (100d / 128d);
+			value = (buffer[2] * 100.0f) / 255.0f;
 		}
-		return perc;
+		return value;
 	}
 
 }
