@@ -27,36 +27,30 @@
  */
 package org.envirocar.obdig;
 
+import java.util.Properties;
+
 
 public class FeatureFlags {
 
 	/**
 	 * use PID supported query to identify 
 	 */
-	public static final String PID_SUPPORTED_KEY = "pref_pid_supported";
-//	private static SharedPreferences prefs;
-//	
-//	public static void init(Context context) {
-//		prefs = PreferenceManager.getDefaultSharedPreferences(context);
-//	}
+	public static final String PID_SUPPORTED_KEY = "USE_PID_SUPPORTED";
+	private static Properties prefs = new Properties();
+	
+	public static void init(Properties p) {
+		prefs = p;
+	}
 
 	public static boolean usePIDSupported() {
 		return getFlagValue(PID_SUPPORTED_KEY);
 	}
 
 	private static boolean getFlagValue(String s) {
-//		if (prefs == null) {
-//			return false;
-//		}
-//		try {
-//			return prefs.getBoolean(s, false);
-//		}
-//		catch (RuntimeException e) {
-//		}
-//		catch (Error e) {
-//		}
-//		
-		return false;
+		if (prefs == null) {
+			return false;
+		}
+		return Boolean.valueOf(prefs.getProperty(s));
 	}
 	
 }
