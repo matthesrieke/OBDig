@@ -40,9 +40,9 @@ import java.util.Set;
 public abstract class CommonCommand {
 
 	private static Set<Character> ignoredChars;
-	private static final char COMMAND_SEND_END = '\r';
-	private static final char COMMAND_RECEIVE_END = '>';
-	private static final char COMMAND_RECEIVE_SPACE = ' ';
+	public static final char COMMAND_SEND_END = '\r';
+	public static final char COMMAND_RECEIVE_END = '>';
+	public static final char COMMAND_RECEIVE_SPACE = ' ';
 	
 	static {
 		ignoredChars = new HashSet<Character>();
