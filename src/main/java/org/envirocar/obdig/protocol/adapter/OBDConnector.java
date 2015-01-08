@@ -24,7 +24,7 @@
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
  * PARTICULAR PURPOSE. See the GNU General Public License for more details.
  */
-package org.envirocar.obdig.protocol;
+package org.envirocar.obdig.protocol.adapter;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -32,10 +32,10 @@ import java.io.OutputStream;
 import java.util.List;
 
 import org.envirocar.obdig.commands.CommonCommand;
+import org.envirocar.obdig.protocol.CommandExecutor;
 import org.envirocar.obdig.protocol.exception.AdapterFailedException;
 import org.envirocar.obdig.protocol.exception.ConnectionLostException;
 import org.envirocar.obdig.protocol.exception.UnmatchedCommandResponseException;
-import org.envirocar.obdig.protocol.executor.CommandExecutor;
 
 /**
  * Interface for a OBD connector. It can provide device specific

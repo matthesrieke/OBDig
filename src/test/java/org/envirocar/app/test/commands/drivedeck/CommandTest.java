@@ -26,8 +26,8 @@
  */
 package org.envirocar.app.test.commands.drivedeck;
 
-import org.envirocar.obdig.protocol.ResponseParser;
-import org.envirocar.obdig.protocol.drivedeck.DriveDeckSportConnector;
+import org.envirocar.obdig.protocol.adapter.ResponseParser;
+import org.envirocar.obdig.protocol.adapter.drivedeck.DriveDeckSportConnector;
 
 public class CommandTest {
 

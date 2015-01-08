@@ -37,23 +37,23 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.envirocar.obdig.commands.CommonCommand;
 import org.envirocar.obdig.commands.CommonCommand.CommonCommandState;
-import org.envirocar.obdig.protocol.OBDConnector.ConnectionState;
-import org.envirocar.obdig.protocol.drivedeck.DriveDeckSportConnector;
+import org.envirocar.obdig.protocol.adapter.OBDConnector;
+import org.envirocar.obdig.protocol.adapter.OBDConnector.ConnectionState;
+import org.envirocar.obdig.protocol.adapter.drivedeck.DriveDeckSportConnector;
+import org.envirocar.obdig.protocol.adapter.sequential.AposW3Connector;
+import org.envirocar.obdig.protocol.adapter.sequential.ELM327Connector;
+import org.envirocar.obdig.protocol.adapter.sequential.OBDLinkMXConnector;
 import org.envirocar.obdig.protocol.exception.AdapterFailedException;
 import org.envirocar.obdig.protocol.exception.AllAdaptersFailedException;
 import org.envirocar.obdig.protocol.exception.ConnectionLostException;
 import org.envirocar.obdig.protocol.exception.LooperStoppedException;
-import org.envirocar.obdig.protocol.executor.CommandExecutor;
-import org.envirocar.obdig.protocol.sequential.AposW3Connector;
-import org.envirocar.obdig.protocol.sequential.ELM327Connector;
-import org.envirocar.obdig.protocol.sequential.OBDLinkMXConnector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * this is the main class for interacting with a OBD-II adapter.
  * It takes {@link InputStream} and {@link OutputStream} objects
- * to do the actual raw communication. A {@link Listener} is provided
+ * to do the actual raw communication. A {@link DataListener} is provided
  * with updates. The {@link ConnectionListener} will get informed on
  * certain changes in the connection state.
  * 
@@ -77,7 +77,7 @@ public class OBDCommandLooper {
 	
 	private List<OBDConnector> adapterCandidates = new ArrayList<OBDConnector>();
 	private OBDConnector obdAdapter;
-	private Listener commandListener;
+	private DataListener commandListener;
 	private InputStream inputStream;
 	private OutputStream outputStream;
 	private CommandExecutor commandExecutionHandler;
@@ -202,7 +202,7 @@ public class OBDCommandLooper {
 	 * @throws IllegalArgumentException if one of the inputs equals null
 	 */
 	public OBDCommandLooper(InputStream in, OutputStream out,
-			String deviceName, Listener l, ConnectionListener cl) {
+			String deviceName, DataListener l, ConnectionListener cl) {
 		
 		if (in == null) throw new IllegalArgumentException("in must not be null!");
 		if (out == null) throw new IllegalArgumentException("out must not be null!");

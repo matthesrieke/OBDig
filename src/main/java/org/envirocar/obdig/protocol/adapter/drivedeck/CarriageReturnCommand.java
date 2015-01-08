@@ -24,25 +24,37 @@
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
  * PARTICULAR PURPOSE. See the GNU General Public License for more details.
  */
-package org.envirocar.obdig.protocol;
+package org.envirocar.obdig.protocol.adapter.drivedeck;
 
 import org.envirocar.obdig.commands.CommonCommand;
 
-public interface ResponseParser {
+public class CarriageReturnCommand extends CommonCommand {
 
+	private static final String NAME = "DriveDeck CR";
+
+	public CarriageReturnCommand() {
+		super(NAME);
+	}
+
+	@Override
+	public void parseRawData(byte[] data) {
+		
+	}
+
+	@Override
+	public String getCommandName() {
+		return NAME;
+	}
 	
-	/**
-	 * @param bytes the byte buffer
-	 * @param start offset index
-	 * @param count byte count
-	 * @return the parsed command response
-	 */
-	public CommonCommand processResponse(byte[] bytes, int start, int count);
+	@Override
+	public byte[] getOutgoingBytes() {
+		return new byte[0];
+	}
 
-	/**
-	 * @return the end of line character
-	 */
-	public char getEndOfLine();
+	@Override
+	public byte[] getRawData() {
+		return null;
+	}
 
 
 }

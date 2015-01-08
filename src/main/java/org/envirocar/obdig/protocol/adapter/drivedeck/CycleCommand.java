@@ -24,7 +24,7 @@
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
  * PARTICULAR PURPOSE. See the GNU General Public License for more details.
  */
-package org.envirocar.obdig.protocol.drivedeck;
+package org.envirocar.obdig.protocol.adapter.drivedeck;
 
 import java.util.List;
 

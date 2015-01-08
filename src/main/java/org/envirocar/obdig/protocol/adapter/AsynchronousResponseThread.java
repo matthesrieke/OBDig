@@ -24,7 +24,7 @@
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
  * PARTICULAR PURPOSE. See the GNU General Public License for more details.
  */
-package org.envirocar.obdig.protocol;
+package org.envirocar.obdig.protocol.adapter;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -32,8 +32,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.envirocar.obdig.commands.CommonCommand;
+import org.envirocar.obdig.protocol.CommandExecutor;
 import org.envirocar.obdig.protocol.exception.LooperStoppedException;
-import org.envirocar.obdig.protocol.executor.CommandExecutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

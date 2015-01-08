@@ -24,30 +24,14 @@
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
  * PARTICULAR PURPOSE. See the GNU General Public License for more details.
  */
-package org.envirocar.obdig.protocol;
+package org.envirocar.obdig.protocol.adapter.sequential;
 
-import org.envirocar.obdig.commands.CommonCommand;
+public class OBDLinkMXConnector extends ELM327Connector {
 
-/**
- * Interface that listens for updates from the current obd job
- * 
- * @author jakob
- * 
- */
 
-public interface Listener {
-
-	/**
-	 * Receive the current command
-	 * 
-	 * @param currentJob
-	 *            the answer-job
-	 */
-	void receiveUpdate(CommonCommand currentJob);
-
-	void shutdown();
-
-	void onConnected(String deviceName);
-
+	@Override
+	public boolean supportsDevice(String deviceName) {
+		return deviceName.equalsIgnoreCase("OBDLink MX");
+	}
 
 }

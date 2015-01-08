@@ -24,37 +24,30 @@
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
  * PARTICULAR PURPOSE. See the GNU General Public License for more details.
  */
-package org.envirocar.obdig.protocol.drivedeck;
+package org.envirocar.obdig.protocol;
 
 import org.envirocar.obdig.commands.CommonCommand;
 
-public class CarriageReturnCommand extends CommonCommand {
+/**
+ * Interface that listens for updates from the current obd job
+ * 
+ * @author jakob
+ * 
+ */
 
-	private static final String NAME = "DriveDeck CR";
+public interface DataListener {
 
-	public CarriageReturnCommand() {
-		super(NAME);
-	}
+	/**
+	 * Receive the current command
+	 * 
+	 * @param currentJob
+	 *            the answer-job
+	 */
+	void receiveUpdate(CommonCommand currentJob);
 
-	@Override
-	public void parseRawData(byte[] data) {
-		
-	}
+	void shutdown();
 
-	@Override
-	public String getCommandName() {
-		return NAME;
-	}
-	
-	@Override
-	public byte[] getOutgoingBytes() {
-		return new byte[0];
-	}
-
-	@Override
-	public byte[] getRawData() {
-		return null;
-	}
+	void onConnected(String deviceName);
 
 
 }

@@ -42,10 +42,10 @@ import javax.microedition.io.StreamConnection;
 
 import org.envirocar.obdig.commands.CommonCommand;
 import org.envirocar.obdig.commands.NumberResultCommand;
+import org.envirocar.obdig.protocol.CommandExecutor;
 import org.envirocar.obdig.protocol.ConnectionListener;
-import org.envirocar.obdig.protocol.Listener;
+import org.envirocar.obdig.protocol.DataListener;
 import org.envirocar.obdig.protocol.OBDCommandLooper;
-import org.envirocar.obdig.protocol.executor.CommandExecutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -147,7 +147,7 @@ public class OBDTestClient implements DiscoveryListener {
 		//not used atm
 	}
 	
-	public static class LocalListener implements Listener {
+	public static class LocalListener implements DataListener {
 
 		@Override
 		public void receiveUpdate(CommonCommand currentJob) {

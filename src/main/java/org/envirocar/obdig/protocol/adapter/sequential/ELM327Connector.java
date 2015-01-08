@@ -24,7 +24,7 @@
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
  * PARTICULAR PURPOSE. See the GNU General Public License for more details.
  */
-package org.envirocar.obdig.protocol.sequential;
+package org.envirocar.obdig.protocol.adapter.sequential;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +36,7 @@ import org.envirocar.obdig.commands.control.LineFeedOff;
 import org.envirocar.obdig.commands.control.ObdReset;
 import org.envirocar.obdig.commands.control.SelectAutoProtocol;
 import org.envirocar.obdig.commands.control.Timeout;
-import org.envirocar.obdig.protocol.AbstractSequentialConnector;
+import org.envirocar.obdig.protocol.adapter.AbstractSequentialConnector;
 
 public class ELM327Connector extends AbstractSequentialConnector {
 	

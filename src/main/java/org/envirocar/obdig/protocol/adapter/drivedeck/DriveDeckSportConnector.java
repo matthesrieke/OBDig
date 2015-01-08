@@ -24,7 +24,7 @@
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
  * PARTICULAR PURPOSE. See the GNU General Public License for more details.
  */
-package org.envirocar.obdig.protocol.drivedeck;
+package org.envirocar.obdig.protocol.adapter.drivedeck;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -42,9 +42,9 @@ import org.envirocar.obdig.commands.numeric.O2LambdaProbe;
 import org.envirocar.obdig.commands.numeric.RPM;
 import org.envirocar.obdig.commands.numeric.Speed;
 import org.envirocar.obdig.commands.raw.PIDSupported;
-import org.envirocar.obdig.protocol.AbstractAsynchronousConnector;
-import org.envirocar.obdig.protocol.ResponseParser;
-import org.envirocar.obdig.protocol.drivedeck.CycleCommand.PID;
+import org.envirocar.obdig.protocol.adapter.AbstractAsynchronousConnector;
+import org.envirocar.obdig.protocol.adapter.ResponseParser;
+import org.envirocar.obdig.protocol.adapter.drivedeck.CycleCommand.PID;
 import org.envirocar.obdig.util.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

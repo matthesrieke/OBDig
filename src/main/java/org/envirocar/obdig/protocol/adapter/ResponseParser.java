@@ -24,14 +24,25 @@
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
  * PARTICULAR PURPOSE. See the GNU General Public License for more details.
  */
-package org.envirocar.obdig.protocol.sequential;
+package org.envirocar.obdig.protocol.adapter;
 
-public class OBDLinkMXConnector extends ELM327Connector {
+import org.envirocar.obdig.commands.CommonCommand;
 
+public interface ResponseParser {
 
-	@Override
-	public boolean supportsDevice(String deviceName) {
-		return deviceName.equalsIgnoreCase("OBDLink MX");
-	}
+	
+	/**
+	 * @param bytes the byte buffer
+	 * @param start offset index
+	 * @param count byte count
+	 * @return the parsed command response
+	 */
+	public CommonCommand processResponse(byte[] bytes, int start, int count);
+
+	/**
+	 * @return the end of line character
+	 */
+	public char getEndOfLine();
+
 
 }
