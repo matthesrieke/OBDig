@@ -31,7 +31,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
 
-import org.envirocar.obdig.commands.CommonCommand;
+import org.envirocar.obdig.commands.AbstractCommand;
 import org.envirocar.obdig.protocol.CommandExecutor;
 import org.envirocar.obdig.protocol.exception.AdapterFailedException;
 import org.envirocar.obdig.protocol.exception.ConnectionLostException;
@@ -117,7 +117,7 @@ public interface OBDConnector {
 	 * @throws UnmatchedCommandResponseException if the response did not match the requested command
 	 * @throws ConnectionLostException if the maximum number of unmatched responses exceeded
 	 */
-	public List<CommonCommand> executeRequestCommands() throws IOException,
+	public List<AbstractCommand> executeRequestCommands() throws IOException,
 			AdapterFailedException, ConnectionLostException;
 
 	

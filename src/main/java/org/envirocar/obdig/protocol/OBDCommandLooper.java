@@ -35,8 +35,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.envirocar.obdig.commands.CommonCommand;
-import org.envirocar.obdig.commands.CommonCommand.CommonCommandState;
+import org.envirocar.obdig.commands.AbstractCommand;
+import org.envirocar.obdig.commands.AbstractCommand.CommonCommandState;
 import org.envirocar.obdig.protocol.adapter.OBDConnector;
 import org.envirocar.obdig.protocol.adapter.OBDConnector.ConnectionState;
 import org.envirocar.obdig.protocol.adapter.drivedeck.DriveDeckSportConnector;
@@ -93,7 +93,7 @@ public class OBDCommandLooper {
 	private long lastSuccessfulCommandTime;
 	private boolean userRequestedStop;
 	
-	private Runnable commonCommandsRunnable = new CommonCommandsRunnable();
+	private Runnable commandsRunnable = new CommandsRunnable();
 	private Runnable initializationCommandsRunnable = new InitializationCommandsRunnable() ;
 
 	/**
@@ -202,7 +202,7 @@ public class OBDCommandLooper {
 	 */
 	private void executeCommandRequests() throws IOException {
 		
-		List<CommonCommand> cmds;
+		List<AbstractCommand> cmds;
 		try {
 			cmds = this.obdAdapter.executeRequestCommands();
 		} catch (ConnectionLostException e) {
@@ -219,7 +219,7 @@ public class OBDCommandLooper {
 		 * only forward those command to the listener that
 		 * have been processed succesfully
 		 */
-		for (CommonCommand cmd : cmds) {
+		for (AbstractCommand cmd : cmds) {
 			if (cmd.getCommandState() == CommonCommandState.FINISHED) {
 				commandListener.receiveUpdate(cmd);
 				time = cmd.getResultTime();
@@ -248,7 +248,7 @@ public class OBDCommandLooper {
 		 * remove all callbacks from the executor
 		 */
 		commandExecutor.removeCallbacks(initializationCommandsRunnable);
-		commandExecutor.removeCallbacks(commonCommandsRunnable);
+		commandExecutor.removeCallbacks(commandsRunnable);
 		
 		/*
 		 * if we were too often in the same phase (e.g. init),
@@ -274,7 +274,7 @@ public class OBDCommandLooper {
 		case COMMAND_EXECUTION:
 			this.connectionEstablished = true;
 			this.connectionListener.onConnectionVerified();
-			commandExecutor.postDelayed(commonCommandsRunnable, requestPeriod);
+			commandExecutor.postDelayed(commandsRunnable, requestPeriod);
 			commandListener.onConnected(deviceName);
 			
 			/*
@@ -425,7 +425,7 @@ public class OBDCommandLooper {
 	/**
 	 * This {@link Runnable} executes the data request command PIDs (e.g. speed, MAF, ...).
 	 */
-	private class CommonCommandsRunnable implements Runnable {
+	private class CommandsRunnable implements Runnable {
 		
 		public void run() {
 			if (!running) {
@@ -452,7 +452,7 @@ public class OBDCommandLooper {
 			/*
 			 * post self again to the executor with the defined delay
 			 */
-			commandExecutor.postDelayed(commonCommandsRunnable, requestPeriod);
+			commandExecutor.postDelayed(commandsRunnable, requestPeriod);
 		}
 	}
 	
@@ -481,7 +481,7 @@ public class OBDCommandLooper {
 				 * check if we received data in the MAX_NODATA_TIME window
 				 */
 				if (System.currentTimeMillis() - lastSuccessfulCommandTime > MAX_NODATA_TIME) {
-					commandExecutor.removeCallbacks(commonCommandsRunnable);
+					commandExecutor.removeCallbacks(commandsRunnable);
 					commandExecutor.shutdownExecutions();
 					
 					if (OBDCommandLooper.this.obdAdapter != null) {

@@ -44,42 +44,42 @@ public class ResponseByteTest {
 	@Test
 	public void testEngineLoad() {
 		EngineLoad s = new EngineLoad();
-		Assert.assertTrue(s.getResponseTypeID().equals(PID.CALCULATED_ENGINE_LOAD.toString()));
+		Assert.assertTrue(s.getPIDAsString().equals(PID.CALCULATED_ENGINE_LOAD.toString()));
 	}
 	
 	@Test
 	public void testIntakePressure() {
 		IntakePressure s = new IntakePressure();
-		Assert.assertTrue(s.getResponseTypeID().equals(PID.INTAKE_MAP.toString()));
+		Assert.assertTrue(s.getPIDAsString().equals(PID.INTAKE_MAP.toString()));
 	}
 	
 	@Test
 	public void testIntakeTemp() {
 		IntakeTemperature s = new IntakeTemperature();
-		Assert.assertTrue(s.getResponseTypeID().equals(PID.INTAKE_AIR_TEMP.toString()));
+		Assert.assertTrue(s.getPIDAsString().equals(PID.INTAKE_AIR_TEMP.toString()));
 	}
 	
 	@Test
 	public void testMAF() {
 		MAF s = new MAF();
-		Assert.assertTrue(s.getResponseTypeID().equals(PID.MAF.toString()));
+		Assert.assertTrue(s.getPIDAsString().equals(PID.MAF.toString()));
 	}
 	
 	@Test
 	public void testRPM() {
 		RPM s = new RPM();
-		Assert.assertTrue(s.getResponseTypeID().equals(PID.RPM.toString()));
+		Assert.assertTrue(s.getPIDAsString().equals(PID.RPM.toString()));
 	}
 	
 	@Test
 	public void testSpeed() {
 		Speed s = new Speed();
-		Assert.assertTrue(s.getResponseTypeID().equals(PID.SPEED.toString()));
+		Assert.assertTrue(s.getPIDAsString().equals(PID.SPEED.toString()));
 	}
 	
 	@Test
 	public void testTPS() {
 		TPS s = new TPS();
-		Assert.assertTrue(s.getResponseTypeID().equals(PID.TPS.toString()));
+		Assert.assertTrue(s.getPIDAsString().equals(PID.TPS.toString()));
 	}
 }

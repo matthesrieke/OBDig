@@ -49,7 +49,7 @@ public class FuelPressure extends NumberResultCommand {
 	}
 
 	@Override
-	public String getResponseTypeID() {
+	public String getPIDAsString() {
 		return PID.FUEL_PRESSURE.toString();
 	}
 

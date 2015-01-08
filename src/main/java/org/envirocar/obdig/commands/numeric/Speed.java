@@ -56,7 +56,7 @@ public class Speed extends NumberResultCommand {
 	}
 
 	@Override
-	public String getResponseTypeID() {
+	public String getPIDAsString() {
 		return PID.SPEED.toString();
 	}
 

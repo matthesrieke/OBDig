@@ -55,7 +55,7 @@ public class ShortTermTrimBank1 extends NumberResultCommand {
 	}
 
 	@Override
-	public String getResponseTypeID() {
+	public String getPIDAsString() {
 		return "06";
 	}
 

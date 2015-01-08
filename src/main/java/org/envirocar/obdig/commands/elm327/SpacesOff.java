@@ -38,7 +38,7 @@ public class SpacesOff extends ELM327Command {
 	}
 
 	@Override
-	public String getResponseTypeID() {
+	public String getPIDAsString() {
 		return "S0";
 	}
 

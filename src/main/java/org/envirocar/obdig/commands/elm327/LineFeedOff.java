@@ -38,7 +38,7 @@ public class LineFeedOff extends ELM327Command {
 	}
 
 	@Override
-	public String getResponseTypeID() {
+	public String getPIDAsString() {
 		return "L0";
 	}
 

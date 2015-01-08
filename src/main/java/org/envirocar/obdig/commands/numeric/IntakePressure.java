@@ -58,7 +58,7 @@ public class IntakePressure extends NumberResultCommand {
 
 
 	@Override
-	public String getResponseTypeID() {
+	public String getPIDAsString() {
 		return PID.INTAKE_MAP.toString();
 	}
 

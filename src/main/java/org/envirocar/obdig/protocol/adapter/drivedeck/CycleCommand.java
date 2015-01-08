@@ -28,10 +28,10 @@ package org.envirocar.obdig.protocol.adapter.drivedeck;
 
 import java.util.List;
 
-import org.envirocar.obdig.commands.CommonCommand;
+import org.envirocar.obdig.commands.AbstractCommand;
 import org.envirocar.obdig.commands.PIDUtil;
 
-public class CycleCommand extends CommonCommand {
+public class CycleCommand extends AbstractCommand {
 	
 	public static enum PID {
 		SPEED {
@@ -148,7 +148,7 @@ public class CycleCommand extends CommonCommand {
 	}
 
 	@Override
-	public String getResponseTypeID() {
+	public String getPIDAsString() {
 		return "a17";
 	}
 

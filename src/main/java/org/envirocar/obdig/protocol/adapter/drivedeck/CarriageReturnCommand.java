@@ -26,9 +26,9 @@
  */
 package org.envirocar.obdig.protocol.adapter.drivedeck;
 
-import org.envirocar.obdig.commands.CommonCommand;
+import org.envirocar.obdig.commands.AbstractCommand;
 
-public class CarriageReturnCommand extends CommonCommand {
+public class CarriageReturnCommand extends AbstractCommand {
 
 	private static final String NAME = "DriveDeck CR";
 
@@ -54,7 +54,7 @@ public class CarriageReturnCommand extends CommonCommand {
 	}
 
 	@Override
-	public String getResponseTypeID() {
+	public String getPIDAsString() {
 		return "";
 	}
 

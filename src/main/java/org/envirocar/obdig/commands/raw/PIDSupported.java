@@ -30,7 +30,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.envirocar.obdig.commands.CommonCommand;
+import org.envirocar.obdig.commands.AbstractCommand;
 import org.envirocar.obdig.commands.PIDUtil;
 import org.envirocar.obdig.commands.PIDUtil.PID;
 
@@ -38,7 +38,7 @@ import org.envirocar.obdig.commands.PIDUtil.PID;
 /**
  * Turns off line-feed.
  */
-public class PIDSupported extends CommonCommand {
+public class PIDSupported extends AbstractCommand {
 
 	private Set<PID> pids;
 	private byte[] bytes;
@@ -129,7 +129,7 @@ public class PIDSupported extends CommonCommand {
 			else if (index == 2) {
 				String tmp = new String(data, index, length);
 				// this is the ID byte
-				if (!tmp.equals(this.getResponseTypeID())) {
+				if (!tmp.equals(this.getPIDAsString())) {
 					setCommandState(CommonCommandState.UNMATCHED_RESULT);
 					return;
 				}
@@ -167,7 +167,7 @@ public class PIDSupported extends CommonCommand {
 	}
 
 	@Override
-	public String getResponseTypeID() {
+	public String getPIDAsString() {
 		return this.group;
 	}
 

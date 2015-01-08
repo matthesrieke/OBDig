@@ -39,7 +39,7 @@ public class FuelSystemStatusTest {
 		FuelSystemStatus cmd = (FuelSystemStatus) PIDUtil.instantiateCommand(PID.FUEL_SYSTEM_STATUS.toString());
 		
 		Assert.assertTrue(new String(cmd.getOutgoingBytes()).equals("01 ".concat(PID.FUEL_SYSTEM_STATUS.toString())));
-		Assert.assertTrue(PID.FUEL_SYSTEM_STATUS.toString().equals(cmd.getResponseTypeID()));
+		Assert.assertTrue(PID.FUEL_SYSTEM_STATUS.toString().equals(cmd.getPIDAsString()));
 		
 		cmd.parseRawData(createRawDataOpenLoop());
 		

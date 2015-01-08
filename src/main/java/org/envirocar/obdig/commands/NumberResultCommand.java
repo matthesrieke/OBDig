@@ -26,7 +26,7 @@
  */
 package org.envirocar.obdig.commands;
 
-public abstract class NumberResultCommand extends CommonCommand {
+public abstract class NumberResultCommand extends AbstractCommand {
 
 	private static final CharSequence SEARCHING = "SEARCHING";
 	private static final CharSequence STOPPED = "STOPPED";
@@ -67,7 +67,7 @@ public abstract class NumberResultCommand extends CommonCommand {
 			}
 			else if (index == 2) {
 				// this is the ID byte
-				if (!tmp.equals(this.getResponseTypeID())) {
+				if (!tmp.equals(this.getPIDAsString())) {
 					setCommandState(CommonCommandState.UNMATCHED_RESULT);
 					return;
 				}

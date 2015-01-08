@@ -26,10 +26,10 @@
  */
 package org.envirocar.obdig.commands.raw;
 
-import org.envirocar.obdig.commands.CommonCommand;
+import org.envirocar.obdig.commands.AbstractCommand;
 import org.envirocar.obdig.commands.PIDUtil.PID;
 
-public class FuelSystemStatus extends CommonCommand {
+public class FuelSystemStatus extends AbstractCommand {
 
 	public static final String NAME = "Fuel System Status";
 	private int setBit;
@@ -63,7 +63,7 @@ public class FuelSystemStatus extends CommonCommand {
 				}
 				else if (index == 2) {
 					// this is the ID byte
-					if (!tmp.equals(this.getResponseTypeID())) {
+					if (!tmp.equals(this.getPIDAsString())) {
 						setCommandState(CommonCommandState.UNMATCHED_RESULT);
 						return;
 					}
@@ -147,7 +147,7 @@ public class FuelSystemStatus extends CommonCommand {
 	}
 
 	@Override
-	public String getResponseTypeID() {
+	public String getPIDAsString() {
 		return PID.FUEL_SYSTEM_STATUS.toString();
 	}
 

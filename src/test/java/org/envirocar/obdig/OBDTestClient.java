@@ -40,7 +40,7 @@ import javax.bluetooth.ServiceRecord;
 import javax.microedition.io.Connector;
 import javax.microedition.io.StreamConnection;
 
-import org.envirocar.obdig.commands.CommonCommand;
+import org.envirocar.obdig.commands.AbstractCommand;
 import org.envirocar.obdig.commands.NumberResultCommand;
 import org.envirocar.obdig.protocol.CommandExecutor;
 import org.envirocar.obdig.protocol.ConnectionListener;
@@ -150,7 +150,7 @@ public class OBDTestClient implements DiscoveryListener {
 	public static class LocalListener implements DataListener {
 
 		@Override
-		public void receiveUpdate(CommonCommand currentJob) {
+		public void receiveUpdate(AbstractCommand currentJob) {
 			String result;
 			if (currentJob instanceof NumberResultCommand) {
 				result = ((NumberResultCommand) currentJob).getNumberResult().toString();

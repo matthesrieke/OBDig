@@ -32,7 +32,7 @@ import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
 
-import org.envirocar.obdig.commands.CommonCommand.CommonCommandState;
+import org.envirocar.obdig.commands.AbstractCommand.CommonCommandState;
 import org.envirocar.obdig.commands.PIDUtil.PID;
 import org.envirocar.obdig.commands.raw.PIDSupported;
 import org.junit.Assert;
@@ -45,7 +45,7 @@ public class PIDSupportedTest {
 		PIDSupported cmd = new PIDSupported();
 		
 		Assert.assertTrue(new String(cmd.getOutgoingBytes()).equals("01 00"));
-		Assert.assertTrue("00".equals(cmd.getResponseTypeID()));
+		Assert.assertTrue("00".equals(cmd.getPIDAsString()));
 		
 		cmd.parseRawData(createResponseMockup());
 		

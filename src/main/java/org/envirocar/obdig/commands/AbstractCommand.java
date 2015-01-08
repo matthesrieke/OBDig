@@ -36,7 +36,7 @@ import java.util.Set;
  * @author jakob
  * 
  */
-public abstract class CommonCommand {
+public abstract class AbstractCommand {
 	
 	/**
 	 * The state of the command.
@@ -67,7 +67,7 @@ public abstract class CommonCommand {
 	
 	private byte[] command;
 
-	public abstract String getResponseTypeID();
+	public abstract String getPIDAsString();
 	
 	public abstract byte[] getRawData();
 
@@ -128,7 +128,7 @@ public abstract class CommonCommand {
 		if (this.command != null) {
 			return this.command;
 		}
-		byte[] typeId = getResponseTypeID().getBytes();
+		byte[] typeId = getPIDAsString().getBytes();
 		byte[] modeByte = getModeBytes();
 		this.command = new byte[modeByte.length + typeId.length + 1];
 		

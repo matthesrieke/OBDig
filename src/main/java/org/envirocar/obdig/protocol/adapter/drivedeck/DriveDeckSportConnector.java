@@ -33,8 +33,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
-import org.envirocar.obdig.commands.CommonCommand;
-import org.envirocar.obdig.commands.CommonCommand.CommonCommandState;
+import org.envirocar.obdig.commands.AbstractCommand;
+import org.envirocar.obdig.commands.AbstractCommand.CommonCommandState;
 import org.envirocar.obdig.commands.numeric.IntakePressure;
 import org.envirocar.obdig.commands.numeric.IntakeTemperature;
 import org.envirocar.obdig.commands.numeric.MAF;
@@ -106,8 +106,8 @@ public class DriveDeckSportConnector extends AbstractAsynchronousConnector {
 			byte[] rawBytes = new byte[12];
 			rawBytes[0] = '4';
 			rawBytes[1] = '1';
-			rawBytes[2] = (byte) pidCmd.getResponseTypeID().charAt(0);
-			rawBytes[3] = (byte) pidCmd.getResponseTypeID().charAt(1);
+			rawBytes[2] = (byte) pidCmd.getPIDAsString().charAt(0);
+			rawBytes[3] = (byte) pidCmd.getPIDAsString().charAt(1);
 			int target = 4;
 			String hexTmp;
 			for (int i = 9; i < 14; i++) {
@@ -200,14 +200,14 @@ public class DriveDeckSportConnector extends AbstractAsynchronousConnector {
 	}
 
 
-	private CommonCommand parsePIDResponse(String pid,
+	private AbstractCommand parsePIDResponse(String pid,
 			byte[] rawBytes, long now) {
 		
 		/*
 		 * resulting HEX values are 0x0d additive to the
 		 * default PIDs of OBD. e.g. RPM = 0x19 = 0x0c + 0x0d
 		 */
-		CommonCommand result = null;
+		AbstractCommand result = null;
 		if (pid.equals("41")) {
 			//Speed
 			result = new Speed();
@@ -237,7 +237,7 @@ public class DriveDeckSportConnector extends AbstractAsynchronousConnector {
 		oneTimePIDLog(pid, rawBytes);
 		
 		if (result != null) {
-			byte[] rawData = createRawData(rawBytes, result.getResponseTypeID());
+			byte[] rawData = createRawData(rawBytes, result.getPIDAsString());
 			result.parseRawData(rawData);
 			
 			if (result.getCommandState() == CommonCommandState.EXECUTION_ERROR ||
@@ -282,9 +282,9 @@ public class DriveDeckSportConnector extends AbstractAsynchronousConnector {
 
 
 	@Override
-	protected List<CommonCommand> getRequestCommands() {
+	protected List<AbstractCommand> getRequestCommands() {
 		if (System.currentTimeMillis() - lastResult > SEND_CYCLIC_COMMAND_DELTA) {
-			return Collections.singletonList((CommonCommand) cycleCommand);
+			return Collections.singletonList((AbstractCommand) cycleCommand);
 		}
 		else {
 			return Collections.emptyList();
@@ -304,14 +304,14 @@ public class DriveDeckSportConnector extends AbstractAsynchronousConnector {
 	}
 	
 	@Override
-	protected List<CommonCommand> getInitializationCommands() {
+	protected List<AbstractCommand> getInitializationCommands() {
 		try {
 			Thread.sleep(500);
 		} catch (InterruptedException e) {
 			logger.warn(e.getMessage(), e);
 		}
 		
-		return Collections.singletonList((CommonCommand) new CarriageReturnCommand());
+		return Collections.singletonList((AbstractCommand) new CarriageReturnCommand());
 	}
 
 	@Override
@@ -322,7 +322,7 @@ public class DriveDeckSportConnector extends AbstractAsynchronousConnector {
 
 	public class LocalResponseParser implements ResponseParser {
 		@Override
-		public CommonCommand processResponse(byte[] bytes, int start, int count) {
+		public AbstractCommand processResponse(byte[] bytes, int start, int count) {
 			if (count <= 0) return null;
 			
 			char type = (char) bytes[start+0];
@@ -379,7 +379,7 @@ public class DriveDeckSportConnector extends AbstractAsynchronousConnector {
 						pidResponseValue[target] = bytes[i];
 					}
 					
-					CommonCommand result = parsePIDResponse(pid, pidResponseValue, now);
+					AbstractCommand result = parsePIDResponse(pid, pidResponseValue, now);
 					
 					if (result != null) {
 						lastResult = now;

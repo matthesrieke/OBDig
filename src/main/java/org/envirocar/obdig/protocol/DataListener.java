@@ -26,7 +26,7 @@
  */
 package org.envirocar.obdig.protocol;
 
-import org.envirocar.obdig.commands.CommonCommand;
+import org.envirocar.obdig.commands.AbstractCommand;
 
 /**
  * Interface that listens for updates from the current obd job
@@ -43,7 +43,7 @@ public interface DataListener {
 	 * @param currentJob
 	 *            the answer-job
 	 */
-	void receiveUpdate(CommonCommand currentJob);
+	void receiveUpdate(AbstractCommand currentJob);
 
 	void shutdown();
 

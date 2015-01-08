@@ -54,7 +54,7 @@ public class TPS extends NumberResultCommand {
 	}
 
 	@Override
-	public String getResponseTypeID() {
+	public String getPIDAsString() {
 		return PID.TPS.toString();
 	}
 

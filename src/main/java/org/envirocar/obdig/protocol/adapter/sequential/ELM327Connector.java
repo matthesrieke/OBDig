@@ -29,7 +29,7 @@ package org.envirocar.obdig.protocol.adapter.sequential;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.envirocar.obdig.commands.CommonCommand;
+import org.envirocar.obdig.commands.AbstractCommand;
 import org.envirocar.obdig.commands.StringResultCommand;
 import org.envirocar.obdig.commands.elm327.EchoOff;
 import org.envirocar.obdig.commands.elm327.LineFeedOff;
@@ -86,8 +86,8 @@ public class ELM327Connector extends AbstractSequentialConnector {
 	 */
 
 	@Override
-	public List<CommonCommand> getInitializationCommands() {
-		List<CommonCommand> result = new ArrayList<CommonCommand>();
+	public List<AbstractCommand> getInitializationCommands() {
+		List<AbstractCommand> result = new ArrayList<AbstractCommand>();
 		result.add(new ObdReset());
 		result.add(new EchoOff());
 		result.add(new EchoOff());
@@ -103,7 +103,7 @@ public class ELM327Connector extends AbstractSequentialConnector {
 	}
 
 	@Override
-	public void processInitializationCommand(CommonCommand cmd) {
+	public void processInitializationCommand(AbstractCommand cmd) {
 		if (cmd instanceof StringResultCommand) {
 			String content = ((StringResultCommand) cmd).getStringResult();
 			

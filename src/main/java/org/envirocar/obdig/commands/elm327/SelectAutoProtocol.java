@@ -39,7 +39,7 @@ public class SelectAutoProtocol extends ELM327Command {
 	}
 
 	@Override
-	public String getResponseTypeID() {
+	public String getPIDAsString() {
 		return "SP 0";
 	}
 

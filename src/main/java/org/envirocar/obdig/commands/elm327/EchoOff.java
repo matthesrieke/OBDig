@@ -39,7 +39,7 @@ public class EchoOff extends ELM327Command {
 	}
 
 	@Override
-	public String getResponseTypeID() {
+	public String getPIDAsString() {
 		return "E0";
 	}
 

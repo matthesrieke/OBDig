@@ -70,7 +70,7 @@ public class MAF extends NumberResultCommand {
 	}
 
 	@Override
-	public String getResponseTypeID() {
+	public String getPIDAsString() {
 		return PID.MAF.toString();
 	}
 }

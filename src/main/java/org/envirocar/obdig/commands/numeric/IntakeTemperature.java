@@ -55,7 +55,7 @@ public class IntakeTemperature extends NumberResultCommand {
 	}
 
 	@Override
-	public String getResponseTypeID() {
+	public String getPIDAsString() {
 		return PID.INTAKE_AIR_TEMP.toString();
 	}
 

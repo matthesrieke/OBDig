@@ -52,7 +52,7 @@ public class Timeout extends ELM327Command {
 
 
 	@Override
-	public String getResponseTypeID() {
+	public String getPIDAsString() {
 		return this.typeId;
 	}
 

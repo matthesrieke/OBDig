@@ -26,7 +26,7 @@
  */
 package org.envirocar.obdig.commands;
 
-public abstract class StringResultCommand extends CommonCommand {
+public abstract class StringResultCommand extends AbstractCommand {
 
 	private byte[] rawData;
 

@@ -45,7 +45,7 @@ public class ObdReset extends ELM327Command {
 
 
 	@Override
-	public String getResponseTypeID() {
+	public String getPIDAsString() {
 		return "Z";
 	}
 

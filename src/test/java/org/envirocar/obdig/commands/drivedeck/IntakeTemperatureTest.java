@@ -26,7 +26,7 @@
  */
 package org.envirocar.obdig.commands.drivedeck;
 
-import org.envirocar.obdig.commands.CommonCommand;
+import org.envirocar.obdig.commands.AbstractCommand;
 import org.envirocar.obdig.commands.numeric.IntakeTemperature;
 import org.envirocar.obdig.protocol.adapter.ResponseParser;
 import org.junit.Assert;
@@ -39,7 +39,7 @@ public class IntakeTemperatureTest extends CommandTest {
 		ResponseParser parser = getResponseParser();
 		
 		byte[] bytes = createBytes();
-		CommonCommand resp = parser.processResponse(bytes, 0, bytes.length);
+		AbstractCommand resp = parser.processResponse(bytes, 0, bytes.length);
 		
 		Assert.assertTrue(resp != null && resp instanceof IntakeTemperature);
 		

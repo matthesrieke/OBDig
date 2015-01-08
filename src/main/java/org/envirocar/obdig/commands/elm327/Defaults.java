@@ -39,7 +39,7 @@ public class Defaults extends ELM327Command {
 	}
 	
 	@Override
-	public String getResponseTypeID() {
+	public String getPIDAsString() {
 		return "D";
 	}
 

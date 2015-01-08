@@ -58,7 +58,7 @@ public class RPM extends NumberResultCommand {
 	}
 
 	@Override
-	public String getResponseTypeID() {
+	public String getPIDAsString() {
 		return PID.RPM.toString();
 	}
 

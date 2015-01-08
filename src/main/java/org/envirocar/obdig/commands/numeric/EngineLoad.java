@@ -57,7 +57,7 @@ public class EngineLoad extends NumberResultCommand {
 
 
 	@Override
-	public String getResponseTypeID() {
+	public String getPIDAsString() {
 		return PID.CALCULATED_ENGINE_LOAD.toString();
 	}
 

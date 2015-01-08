@@ -29,7 +29,7 @@ package org.envirocar.obdig.protocol.adapter.sequential;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.envirocar.obdig.commands.CommonCommand;
+import org.envirocar.obdig.commands.AbstractCommand;
 import org.envirocar.obdig.commands.StringResultCommand;
 import org.envirocar.obdig.commands.elm327.EchoOff;
 import org.envirocar.obdig.commands.elm327.LineFeedOff;
@@ -44,8 +44,8 @@ public class AposW3Connector extends ELM327Connector {
 	private static final Logger logger = LoggerFactory.getLogger(AposW3Connector.class);
 
 	@Override
-	public List<CommonCommand> getInitializationCommands() {
-		List<CommonCommand> result = new ArrayList<CommonCommand>();
+	public List<AbstractCommand> getInitializationCommands() {
+		List<AbstractCommand> result = new ArrayList<AbstractCommand>();
 		result.add(new ObdReset());
 		result.add(new AposEchoOff());
 		result.add(new AposEchoOff());
@@ -61,7 +61,7 @@ public class AposW3Connector extends ELM327Connector {
 	}
 
 	@Override
-	public void processInitializationCommand(CommonCommand cmd) {
+	public void processInitializationCommand(AbstractCommand cmd) {
 
 		if (cmd instanceof AposEchoOff) {
 			if (cmd instanceof StringResultCommand) {

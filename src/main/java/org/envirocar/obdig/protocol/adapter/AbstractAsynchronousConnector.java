@@ -32,7 +32,7 @@ import java.io.OutputStream;
 import java.util.Collections;
 import java.util.List;
 
-import org.envirocar.obdig.commands.CommonCommand;
+import org.envirocar.obdig.commands.AbstractCommand;
 import org.envirocar.obdig.protocol.CommandExecutor;
 import org.envirocar.obdig.protocol.exception.AdapterFailedException;
 import org.envirocar.obdig.protocol.exception.ConnectionLostException;
@@ -47,9 +47,9 @@ public abstract class AbstractAsynchronousConnector implements OBDConnector {
 	private AsynchronousResponseThread responseThread;
 	private CommandExecutor executor;
 
-	protected abstract List<CommonCommand> getRequestCommands();
+	protected abstract List<AbstractCommand> getRequestCommands();
 
-	protected abstract List<CommonCommand> getInitializationCommands();
+	protected abstract List<AbstractCommand> getInitializationCommands();
 
 	protected abstract char getRequestEndOfLine();
 	
@@ -76,7 +76,7 @@ public abstract class AbstractAsynchronousConnector implements OBDConnector {
 	@Override
 	public void executeInitializationCommands() throws IOException,
 			AdapterFailedException {
-		for (CommonCommand cmd : getInitializationCommands()) {
+		for (AbstractCommand cmd : getInitializationCommands()) {
 			try {
 				Thread.sleep(250);
 			} catch (InterruptedException e) {
@@ -89,10 +89,10 @@ public abstract class AbstractAsynchronousConnector implements OBDConnector {
 
 
 	@Override
-	public List<CommonCommand> executeRequestCommands() throws IOException,
+	public List<AbstractCommand> executeRequestCommands() throws IOException,
 			AdapterFailedException, ConnectionLostException {
 		long sleep = getSleepTimeBetweenCommands();
-		for (CommonCommand cmd : getRequestCommands()) {
+		for (AbstractCommand cmd : getRequestCommands()) {
 			executeCommand(cmd);
 			
 			if (sleep > 0) {
@@ -115,7 +115,7 @@ public abstract class AbstractAsynchronousConnector implements OBDConnector {
 		return Collections.emptyList();
 	}
 
-	private void executeCommand(CommonCommand cmd) throws IOException {
+	private void executeCommand(AbstractCommand cmd) throws IOException {
 		logger.debug("Sending command: "+cmd.getCommandName());
 		
 		byte[] bytes = cmd.getOutgoingBytes();

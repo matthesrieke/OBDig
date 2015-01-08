@@ -126,7 +126,7 @@ public abstract class O2LambdaProbe extends NumberResultCommand {
 	}
 	
 	@Override
-	public String getResponseTypeID() {
+	public String getPIDAsString() {
 		return this.cylinderPosition;
 	}
 	

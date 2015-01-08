@@ -26,7 +26,7 @@
  */
 package org.envirocar.obdig.protocol.adapter;
 
-import org.envirocar.obdig.commands.CommonCommand;
+import org.envirocar.obdig.commands.AbstractCommand;
 
 public interface ResponseParser {
 
@@ -37,7 +37,7 @@ public interface ResponseParser {
 	 * @param count byte count
 	 * @return the parsed command response
 	 */
-	public CommonCommand processResponse(byte[] bytes, int start, int count);
+	public AbstractCommand processResponse(byte[] bytes, int start, int count);
 
 	/**
 	 * @return the end of line character

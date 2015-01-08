@@ -197,11 +197,11 @@ public class PIDUtil {
 	}
 
 	
-	public static CommonCommand instantiateCommand(String pid) {
+	public static AbstractCommand instantiateCommand(String pid) {
 		return instantiateCommand(fromString(pid));
 	}
 	
-	public static CommonCommand instantiateCommand(PID pid) {
+	public static AbstractCommand instantiateCommand(PID pid) {
 		switch (pid) {
 		case FUEL_SYSTEM_STATUS:
 			return new FuelSystemStatus();

@@ -31,7 +31,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.envirocar.obdig.commands.CommonCommand;
+import org.envirocar.obdig.commands.AbstractCommand;
 import org.envirocar.obdig.protocol.CommandExecutor;
 import org.envirocar.obdig.protocol.exception.LooperStoppedException;
 import org.slf4j.Logger;
@@ -47,7 +47,7 @@ public class AsynchronousResponseThread {
 	
 	private Runnable readInputStreamRunnable;
 	
-	private List<CommonCommand> buffer = new ArrayList<CommonCommand>();
+	private List<AbstractCommand> buffer = new ArrayList<AbstractCommand>();
 	
 	protected boolean running = true;
 	private byte[] globalBuffer = new byte[64];
@@ -67,7 +67,7 @@ public class AsynchronousResponseThread {
 			public void run() {
 				while (running) {
 					
-					CommonCommand cmd;
+					AbstractCommand cmd;
 					try {
 						cmd = readResponse();	
 						
@@ -89,7 +89,7 @@ public class AsynchronousResponseThread {
 		};
 	}
 	
-	private CommonCommand readResponse() throws IOException {
+	private AbstractCommand readResponse() throws IOException {
 		byte byteIn;
 		int intIn;
 		while (running) {
@@ -110,7 +110,7 @@ public class AsynchronousResponseThread {
 					isReplete = buffer.size() > MAX_BUFFER_SIZE;
 				}
 				
-				CommonCommand result = null;
+				AbstractCommand result = null;
 				if (!isReplete) {
 					result = responseParser.processResponse(globalBuffer,
 							0, globalIndex);	
@@ -139,10 +139,10 @@ public class AsynchronousResponseThread {
 //		}
 //	}
 
-	public List<CommonCommand> pullAvailableCommands() {
-		List<CommonCommand> result;
+	public List<AbstractCommand> pullAvailableCommands() {
+		List<AbstractCommand> result;
 		synchronized (this) {
-			result = new ArrayList<CommonCommand>(buffer.size());
+			result = new ArrayList<AbstractCommand>(buffer.size());
 			result.addAll(buffer);
 			buffer.clear();
 		}

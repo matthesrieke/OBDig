@@ -27,7 +27,7 @@
 package org.envirocar.obdig.commands;
 
 
-import org.envirocar.obdig.commands.CommonCommand.CommonCommandState;
+import org.envirocar.obdig.commands.AbstractCommand.CommonCommandState;
 import org.envirocar.obdig.commands.numeric.IntakeTemperature;
 import org.junit.Assert;
 import org.junit.Test;
