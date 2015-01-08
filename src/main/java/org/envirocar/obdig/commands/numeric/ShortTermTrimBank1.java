@@ -38,10 +38,6 @@ public class ShortTermTrimBank1 extends NumberResultCommand {
 
 	private double fuelTrimValue = Double.NaN;
 
-	public ShortTermTrimBank1() {
-		super("01 06");
-	}
-
 
 	@Override
 	public String getCommandName() {
@@ -56,6 +52,11 @@ public class ShortTermTrimBank1 extends NumberResultCommand {
 			fuelTrimValue =  (buffer[2] - 128) * (100d / 128d);
 		}
 		return fuelTrimValue;
+	}
+
+	@Override
+	public String getResponseTypeID() {
+		return "06";
 	}
 
 }

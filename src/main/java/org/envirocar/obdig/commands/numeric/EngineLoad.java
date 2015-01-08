@@ -39,12 +39,6 @@ public class EngineLoad extends NumberResultCommand {
 
 	private float value = Float.NaN;
 
-	/**
-	 * Create the Command
-	 */
-	public EngineLoad() {
-		super("01 ".concat(PID.CALCULATED_ENGINE_LOAD.toString()));
-	}
 
 	@Override
 	public String getCommandName() {
@@ -59,6 +53,12 @@ public class EngineLoad extends NumberResultCommand {
 			value = (buffer[2] * 100.0f) / 255.0f;
 		}
 		return value;
+	}
+
+
+	@Override
+	public String getResponseTypeID() {
+		return PID.CALCULATED_ENGINE_LOAD.toString();
 	}
 
 }

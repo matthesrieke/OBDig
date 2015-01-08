@@ -35,10 +35,6 @@ public class FuelSystemStatus extends CommonCommand {
 	private int setBit;
 	private byte[] rawData;
 
-	public FuelSystemStatus() {
-		super("01 ".concat(PID.FUEL_SYSTEM_STATUS.toString()));
-	}
-
 	@Override
 	public void parseRawData(byte[] data) {
 		this.rawData = data;
@@ -148,6 +144,11 @@ public class FuelSystemStatus extends CommonCommand {
 	@Override
 	public byte[] getRawData() {
 		return this.rawData;
+	}
+
+	@Override
+	public String getResponseTypeID() {
+		return PID.FUEL_SYSTEM_STATUS.toString();
 	}
 
 }

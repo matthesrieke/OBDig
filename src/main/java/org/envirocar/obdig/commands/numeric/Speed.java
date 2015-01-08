@@ -40,10 +40,6 @@ public class Speed extends NumberResultCommand {
 	public static final String NAME = "Vehicle Speed";
 	private int metricSpeed = Short.MIN_VALUE;
 
-	public Speed() {
-		super("01 ".concat(PID.SPEED.toString()));
-	}
-
 
 	@Override
 	public String getCommandName() {
@@ -57,6 +53,11 @@ public class Speed extends NumberResultCommand {
 			metricSpeed = buffer[2];
 		}
 		return metricSpeed;
+	}
+
+	@Override
+	public String getResponseTypeID() {
+		return PID.SPEED.toString();
 	}
 
 }

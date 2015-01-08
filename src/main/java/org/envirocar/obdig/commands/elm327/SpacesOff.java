@@ -32,16 +32,14 @@ package org.envirocar.obdig.commands.elm327;
  */
 public class SpacesOff extends ELM327Command {
 
-	/**
-	 * @param command
-	 */
-	public SpacesOff() {
-		super("AT S0");
-	}
-
 	@Override
 	public String getCommandName() {
 		return "Spaces Off";
+	}
+
+	@Override
+	public String getResponseTypeID() {
+		return "S0";
 	}
 
 }

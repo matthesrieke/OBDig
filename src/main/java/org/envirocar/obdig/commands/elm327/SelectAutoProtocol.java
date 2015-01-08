@@ -32,17 +32,15 @@ package org.envirocar.obdig.commands.elm327;
  */
 public class SelectAutoProtocol extends ELM327Command {
 
-	/**
-	 * @param command
-	 */
-	public SelectAutoProtocol() {
-		super("AT SP " + 0);
-	}
-
 
 	@Override
 	public String getCommandName() {
 		return "Protocol: Auto";
+	}
+
+	@Override
+	public String getResponseTypeID() {
+		return "SP 0";
 	}
 
 }

@@ -32,10 +32,6 @@ package org.envirocar.obdig.commands.elm327;
  */
 public class ObdReset extends ELM327Command {
 
-	public ObdReset() {
-		super("AT Z");
-	}
-
 	@Override
 	public boolean awaitsResults() {
 		return false;
@@ -45,6 +41,12 @@ public class ObdReset extends ELM327Command {
 	@Override
 	public String getCommandName() {
 		return "Reset OBD";
+	}
+
+
+	@Override
+	public String getResponseTypeID() {
+		return "Z";
 	}
 
 }

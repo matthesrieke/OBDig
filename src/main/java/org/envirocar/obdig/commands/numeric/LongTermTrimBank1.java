@@ -38,10 +38,6 @@ public class LongTermTrimBank1 extends NumberResultCommand {
 
 	private double perc = Double.NaN;
 
-	public LongTermTrimBank1() {
-		super("01 07");
-	}
-
 	@Override
 	public String getCommandName() {
 
@@ -56,6 +52,11 @@ public class LongTermTrimBank1 extends NumberResultCommand {
 			perc = (tmpValue - 128) * (100d / 128d);
 		}
 		return perc;
+	}
+
+	@Override
+	public String getResponseTypeID() {
+		return "07";
 	}
 
 }

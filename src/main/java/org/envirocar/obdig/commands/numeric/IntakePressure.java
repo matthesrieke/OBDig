@@ -41,10 +41,6 @@ public class IntakePressure extends NumberResultCommand {
 	public static final String NAME = "Intake Manifold Pressure";
 	private int pressure = Short.MIN_VALUE;
 
-	public IntakePressure() {
-		super("01 ".concat(PID.INTAKE_MAP.toString()));
-	}
-
 	@Override
 	public String getCommandName() {
 		return NAME;
@@ -58,6 +54,12 @@ public class IntakePressure extends NumberResultCommand {
 			pressure = buffer[2];
 		}
 		return pressure;
+	}
+
+
+	@Override
+	public String getResponseTypeID() {
+		return PID.INTAKE_MAP.toString();
 	}
 
 }

@@ -32,16 +32,14 @@ package org.envirocar.obdig.commands.elm327;
  */
 public class LineFeedOff extends ELM327Command {
 
-	/**
-	 * @param command
-	 */
-	public LineFeedOff() {
-		super("AT L0");
-	}
-
 	@Override
 	public String getCommandName() {
 		return "Line Feed Off";
+	}
+
+	@Override
+	public String getResponseTypeID() {
+		return "L0";
 	}
 
 }

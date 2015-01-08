@@ -43,10 +43,6 @@ public class MAF extends NumberResultCommand {
 	public static final String NAME = "Mass Air Flow";
 	private float maf = Float.NaN;
 	
-	public MAF() {
-		super("01 ".concat(PID.MAF.toString()));
-	}
-
 
 	@Override
 	public String getCommandName() {
@@ -71,5 +67,10 @@ public class MAF extends NumberResultCommand {
 
 		}
 		return maf;
+	}
+
+	@Override
+	public String getResponseTypeID() {
+		return PID.MAF.toString();
 	}
 }

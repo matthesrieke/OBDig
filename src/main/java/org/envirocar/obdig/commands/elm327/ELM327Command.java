@@ -30,8 +30,10 @@ import org.envirocar.obdig.commands.StringResultCommand;
 
 public abstract class ELM327Command extends StringResultCommand {
 
-	public ELM327Command(String command) {
-		super(command);
+	private static final byte[] ELM_MODE = "AT".getBytes();
+	
+	@Override
+	public byte[] getModeBytes() {
+		return ELM_MODE;
 	}
-
 }

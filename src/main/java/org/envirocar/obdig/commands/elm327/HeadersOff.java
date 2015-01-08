@@ -32,17 +32,15 @@ package org.envirocar.obdig.commands.elm327;
  */
 public class HeadersOff extends ELM327Command {
 
-	/**
-	 * @param command
-	 */
-	public HeadersOff() {
-		super("AT H0");
-	}
-
 
 	@Override
 	public String getCommandName() {
 		return "Disable Headers";
+	}
+
+	@Override
+	public String getResponseTypeID() {
+		return "H0";
 	}
 
 }

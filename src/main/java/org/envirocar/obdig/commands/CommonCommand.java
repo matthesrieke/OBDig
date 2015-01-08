@@ -37,48 +37,7 @@ import java.util.Set;
  * 
  */
 public abstract class CommonCommand {
-
-	private static Set<Character> ignoredChars;
-	public static final char COMMAND_SEND_END = '\r';
-	public static final char COMMAND_RECEIVE_END = '>';
-	public static final char COMMAND_RECEIVE_SPACE = ' ';
 	
-	public static final String STATUS_OK = "41";
-	
-	static {
-		ignoredChars = new HashSet<Character>();
-		ignoredChars.add(COMMAND_RECEIVE_SPACE);
-		ignoredChars.add(COMMAND_SEND_END);
-	}
-	
-	private String command = null;
-	private Long commandId;
-	private CommonCommandState commandState;
-	private String responseTypeId;
-	private long resultTime;
-
-	/**
-	 * Default constructor to use
-	 * 
-	 * @param command
-	 *            the command to send. This will be the raw data send to the OBD device
-	 *            (if a sub-class does not override {@link #getOutgoingBytes()}).
-	 */
-	public CommonCommand(String command) {
-		this.command = command;
-		determineResponseByte();
-		setCommandState(CommonCommandState.NEW);
-	}
-
-	private void determineResponseByte() {
-		if (this.command == null || this.command.isEmpty()) return;
-		
-		String[] array = this.command.split(" ");
-		if (array != null && array.length > 1) {
-			this.responseTypeId = array[1];
-		}
-	}
-
 	/**
 	 * The state of the command.
 	 */
@@ -86,18 +45,37 @@ public abstract class CommonCommand {
 		NEW, RUNNING, FINISHED, EXECUTION_ERROR, QUEUE_ERROR, SEARCHING, UNMATCHED_RESULT
 	}
 
-
-	public String getResponseTypeID() {
-		return responseTypeId;
+	private static Set<Character> ignoredChars;
+	private static final String DEFAULT_MODE = "01";
+	private static final byte[] DEFAULT_MOD_BYTES = DEFAULT_MODE.getBytes();
+	private static final byte SPACE_BYTE = ' ';
+	
+	public static final String STATUS_OK = "41";
+	public static final char COMMAND_SEND_END = '\r';
+	public static final char COMMAND_RECEIVE_END = '>';
+	public static final char COMMAND_RECEIVE_SPACE = ' ';
+	
+	static {
+		ignoredChars = new HashSet<Character>();
+		ignoredChars.add(COMMAND_RECEIVE_SPACE);
+		ignoredChars.add(COMMAND_SEND_END);
 	}
+	
+	private Long commandId;
+	private CommonCommandState commandState = CommonCommandState.NEW;
+	private long resultTime;
+	
+	private byte[] command;
 
+	public abstract String getResponseTypeID();
+	
+	public abstract byte[] getRawData();
 
+	public abstract void parseRawData(byte[] raw);
+	
 	public boolean responseAlwaysRequired() {
 		return true;
 	}
-
-	public abstract void parseRawData(byte[] raw);
-
 
 	/**
 	 * @return the OBD command name.
@@ -110,7 +88,6 @@ public abstract class CommonCommand {
 	public Long getCommandId() {
 		return commandId;
 	}
-
 
 	/**
 	 * @return the commandState
@@ -133,12 +110,11 @@ public abstract class CommonCommand {
 		sb.append("Commandname: ");
 		sb.append(getCommandName());
 		sb.append(", Command: ");
-		sb.append(command);
+		sb.append(new String(getOutgoingBytes()));
 		sb.append(", Result Time: ");
 		sb.append(getResultTime());
 		return sb.toString();
 	}
-
 
 	public void setResultTime(long currentTimeMillis) {
 		this.resultTime = currentTimeMillis;
@@ -149,7 +125,29 @@ public abstract class CommonCommand {
 	}
 
 	public byte[] getOutgoingBytes() {
-		return command.getBytes();
+		if (this.command != null) {
+			return this.command;
+		}
+		byte[] typeId = getResponseTypeID().getBytes();
+		byte[] modeByte = getModeBytes();
+		this.command = new byte[modeByte.length + typeId.length + 1];
+		
+		int pos = 0;
+		for (int i = 0; i < modeByte.length; i++) {
+			this.command[pos++] = modeByte[i];
+		}
+		
+		this.command[pos++] = SPACE_BYTE;
+		
+		for (int i = 0; i < typeId.length; i++) {
+			this.command[pos++] = typeId[i];
+		}
+		
+		return this.command;
+	}
+
+	public byte[] getModeBytes() {
+		return DEFAULT_MOD_BYTES;
 	}
 
 	public char getEndOfLineReceive() {
@@ -167,8 +165,6 @@ public abstract class CommonCommand {
 	public boolean awaitsResults() {
 		return true;
 	}
-
-	public abstract byte[] getRawData();
 
 	public Set<Character> getIgnoredChars() {
 		return ignoredChars;

@@ -32,16 +32,15 @@ package org.envirocar.obdig.commands.elm327;
  */
 public class EchoOff extends ELM327Command {
 
-	/**
-	 * @param command
-	 */
-	public EchoOff() {
-		super("AT E0");
-	}
 
 	@Override
 	public String getCommandName() {
 		return "Echo Off";
+	}
+
+	@Override
+	public String getResponseTypeID() {
+		return "E0";
 	}
 
 }

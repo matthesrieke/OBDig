@@ -32,9 +32,6 @@ public class CarriageReturnCommand extends CommonCommand {
 
 	private static final String NAME = "DriveDeck CR";
 
-	public CarriageReturnCommand() {
-		super(NAME);
-	}
 
 	@Override
 	public void parseRawData(byte[] data) {
@@ -54,6 +51,11 @@ public class CarriageReturnCommand extends CommonCommand {
 	@Override
 	public byte[] getRawData() {
 		return null;
+	}
+
+	@Override
+	public String getResponseTypeID() {
+		return "";
 	}
 
 

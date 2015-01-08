@@ -40,10 +40,6 @@ public class RPM extends NumberResultCommand {
 	public static final String NAME = "Engine RPM";
 	private int rpm = Short.MIN_VALUE;
 
-	public RPM() {
-		super("01 ".concat(PID.RPM.toString()));
-	}
-
 
 	@Override
 	public String getCommandName() {
@@ -59,6 +55,11 @@ public class RPM extends NumberResultCommand {
 			rpm = (bytethree * 256 + bytefour) / 4;
 		}
 		return rpm;
+	}
+
+	@Override
+	public String getResponseTypeID() {
+		return PID.RPM.toString();
 	}
 
 }

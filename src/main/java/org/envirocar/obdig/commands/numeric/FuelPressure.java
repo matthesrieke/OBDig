@@ -34,9 +34,6 @@ public class FuelPressure extends NumberResultCommand {
 	public static final String NAME = "Fuel Pressure";
 	private int pressure = Short.MIN_VALUE;
 	
-	public FuelPressure() {
-		super("01 ".concat(PID.FUEL_PRESSURE.toString()));
-	}
 
 	@Override
 	public Number getNumberResult() {
@@ -49,6 +46,11 @@ public class FuelPressure extends NumberResultCommand {
 	@Override
 	public String getCommandName() {
 		return NAME;
+	}
+
+	@Override
+	public String getResponseTypeID() {
+		return PID.FUEL_PRESSURE.toString();
 	}
 
 }

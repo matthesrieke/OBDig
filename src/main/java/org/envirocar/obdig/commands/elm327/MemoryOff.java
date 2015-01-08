@@ -32,17 +32,14 @@ package org.envirocar.obdig.commands.elm327;
  */
 public class MemoryOff extends ELM327Command {
 
-	/**
-	 * @param command
-	 */
-	public MemoryOff() {
-		super("AT M0");
-	}
-
-
 	@Override
 	public String getCommandName() {
 		return "Memory Off";
+	}
+
+	@Override
+	public String getResponseTypeID() {
+		return "M0";
 	}
 
 }

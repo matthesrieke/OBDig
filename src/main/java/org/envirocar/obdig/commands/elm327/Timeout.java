@@ -33,19 +33,27 @@ package org.envirocar.obdig.commands.elm327;
  */
 public class Timeout extends ELM327Command {
 
+	private String typeId;
+
 	/**
 	 * @param a
 	 *            value between 0 and 255 that multiplied by 4 results in the
 	 *            desired timeout in milliseconds (ms).
 	 */
 	public Timeout(int timeout) {
-		super("AT ST " + Integer.toHexString(0xFF & timeout));
+		this.typeId = "ST " + Integer.toHexString(0xFF & timeout);
 	}
 
 
 	@Override
 	public String getCommandName() {
 		return "Timeout";
+	}
+
+
+	@Override
+	public String getResponseTypeID() {
+		return this.typeId;
 	}
 
 }

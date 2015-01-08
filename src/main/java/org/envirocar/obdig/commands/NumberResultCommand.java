@@ -37,14 +37,6 @@ public abstract class NumberResultCommand extends CommonCommand {
 	private int[] buffr;
 	private byte[] rawData;
 	
-	/**
-	 * @param command the command to send. This will be the raw data send to the OBD device
-	 * (if a sub-class does not override {@link #getOutgoingBytes()}).
-	 */
-	public NumberResultCommand(String command) {
-		super(command);
-	}
-
 	@Override
 	public void parseRawData(byte[] data) {
 		this.rawData = data;

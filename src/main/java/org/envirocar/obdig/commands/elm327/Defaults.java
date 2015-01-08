@@ -32,17 +32,15 @@ package org.envirocar.obdig.commands.elm327;
  */
 public class Defaults extends ELM327Command {
 
-	/**
-	 * @param command
-	 */
-	public Defaults() {
-		super("AT D");
-	}
-
 
 	@Override
 	public String getCommandName() {
 		return "Defaults";
+	}
+	
+	@Override
+	public String getResponseTypeID() {
+		return "D";
 	}
 
 }

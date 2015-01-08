@@ -40,10 +40,6 @@ public class IntakeTemperature extends NumberResultCommand {
 	public static final String NAME = "Air Intake Temperature";
 	private int temperature = Short.MIN_VALUE;
 
-	public IntakeTemperature() {
-		super("01 ".concat(PID.INTAKE_AIR_TEMP.toString()));
-	}
-
 	@Override
 	public String getCommandName() {
 		return NAME;
@@ -56,6 +52,11 @@ public class IntakeTemperature extends NumberResultCommand {
 			temperature = buffer[2] - 40;
 		}
 		return temperature;
+	}
+
+	@Override
+	public String getResponseTypeID() {
+		return PID.INTAKE_AIR_TEMP.toString();
 	}
 
 }

@@ -39,10 +39,6 @@ public class TPS extends NumberResultCommand {
 
 	private int value = Short.MIN_VALUE;
 
-	public TPS() {
-		super("01 ".concat(PID.TPS.toString()));
-	}
-
 	@Override
 	public String getCommandName() {
 		return "Throttle Position";
@@ -55,6 +51,11 @@ public class TPS extends NumberResultCommand {
 			value = (buffer[2] * 100) / 255;
 		}
 		return value;
+	}
+
+	@Override
+	public String getResponseTypeID() {
+		return PID.TPS.toString();
 	}
 
 }

@@ -81,7 +81,6 @@ public abstract class O2LambdaProbe extends NumberResultCommand {
 	}
 	
 	public O2LambdaProbe(String cylinderPosition) {
-		super("01 ".concat(cylinderPosition));
 		this.cylinderPosition = cylinderPosition;
 		this.pid = cylinderPosition;
 	}
@@ -124,6 +123,11 @@ public abstract class O2LambdaProbe extends NumberResultCommand {
 	
 	public String lambdaString() {
 		return getClass().getSimpleName() +" ("+pid+"): "+getEquivalenceRatio() +"; "+getNumberResult();
+	}
+	
+	@Override
+	public String getResponseTypeID() {
+		return this.cylinderPosition;
 	}
 	
 }

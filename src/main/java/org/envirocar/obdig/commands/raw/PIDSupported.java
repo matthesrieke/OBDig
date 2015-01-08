@@ -53,7 +53,6 @@ public class PIDSupported extends CommonCommand {
 	 * @param group the group of commands ("00", "20", "40" ...)
 	 */
 	public PIDSupported(String group) {
-		super("01 ".concat(group));
 		this.group = group;
 	}
 
@@ -165,6 +164,11 @@ public class PIDSupported extends CommonCommand {
 	@Override
 	public byte[] getRawData() {
 		return this.rawData;
+	}
+
+	@Override
+	public String getResponseTypeID() {
+		return this.group;
 	}
 
 }

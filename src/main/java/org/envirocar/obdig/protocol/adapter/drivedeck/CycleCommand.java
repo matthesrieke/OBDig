@@ -115,7 +115,6 @@ public class CycleCommand extends CommonCommand {
 	
 
 	public CycleCommand(List<PID> pidList) {
-		super(NAME);
 		bytes = new byte[3+pidList.size()];
 		byte[] prefix = "a17".getBytes();
 		
@@ -146,6 +145,11 @@ public class CycleCommand extends CommonCommand {
 	@Override
 	public byte[] getRawData() {
 		return null;
+	}
+
+	@Override
+	public String getResponseTypeID() {
+		return "a17";
 	}
 
 }
