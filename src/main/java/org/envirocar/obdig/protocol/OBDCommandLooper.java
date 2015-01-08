@@ -80,7 +80,7 @@ public class OBDCommandLooper {
 	private DataListener commandListener;
 	private InputStream inputStream;
 	private OutputStream outputStream;
-	private CommandExecutor commandExecutionHandler;
+	private CommandExecutor commandExecutor;
 	protected boolean running = true;
 	protected boolean connectionEstablished = false;
 	protected long requestPeriod = 100;
@@ -93,100 +93,8 @@ public class OBDCommandLooper {
 	private long lastSuccessfulCommandTime;
 	private boolean userRequestedStop;
 	
-	private Runnable commonCommandsRunnable = new Runnable() {
-		public void run() {
-			if (!running) {
-				logger.info("Exiting commandHandler.");
-				throw new LooperStoppedException();
-			}
-			
-			try {
-				executeCommandRequests();
-			} catch (IOException e) {
-				running = false;
-				if (!userRequestedStop) {
-					connectionListener.requestConnectionRetry(e);
-				}
-				logger.info("Exiting commandHandler due to exception: "+e.getMessage(), e);
-				throw new LooperStoppedException();
-			}
-			
-			if (!running) {
-				logger.info("Exiting commandHandler.");
-				throw new LooperStoppedException();
-			}
-			
-			/*
-			 * post self again to the executor with the defined delay
-			 */
-			commandExecutionHandler.postDelayed(commonCommandsRunnable, requestPeriod);
-		}
-	};
-
-
-	private Runnable initializationCommandsRunnable = new Runnable() {
-		public void run() {
-			if (running && !connectionEstablished) {
-				/*
-				 * an async connector will probably only verify its connection
-				 * after one try cycle of executeInitializationRequests.
-				 */
-				if (obdAdapter != null && obdAdapter.connectionState() == ConnectionState.CONNECTED) {
-					connectionEstablished();
-					return;
-				}
-				
-				try {
-					selectAdapter();
-				} catch (AllAdaptersFailedException e) {
-					running = false;
-					connectionListener.onAllAdaptersFailed();
-					throw new LooperStoppedException();
-				}
-				
-				String stmt = "Trying "+obdAdapter.getClass().getSimpleName() +".";
-				logger.info(stmt);
-				connectionListener.onStatusUpdate(stmt);
-			
-				try {
-					executeInitializationRequests();
-				} catch (IOException e) {
-					running = false;
-					if (!userRequestedStop) {
-						connectionListener.requestConnectionRetry(e);
-					}
-					logger.info("Exiting commandHandler due to exception: "+e.getMessage(), e);
-					throw new LooperStoppedException();
-				} catch (AdapterFailedException e) {
-					logger.warn(e.getMessage(), e);
-				}
-				
-				/*
-				 * a sequential connector might already have a satisfied
-				 * connection
-				 */
-				if (obdAdapter != null && obdAdapter.connectionState() == ConnectionState.CONNECTED) {
-					connectionEstablished();
-					return;
-				}
-				
-				if (!running) {
-					logger.info("Exiting commandHandler.");
-					throw new LooperStoppedException();
-				}
-				
-				/*
-				 * no connection has been established, try again after the defined period
-				 */
-				commandExecutionHandler.postDelayed(initializationCommandsRunnable, ADAPTER_TRY_PERIOD);
-			}
-			
-			if (!running) {
-				throw new LooperStoppedException();
-			}
-		}
-
-	};
+	private Runnable commonCommandsRunnable = new CommonCommandsRunnable();
+	private Runnable initializationCommandsRunnable = new InitializationCommandsRunnable() ;
 
 	/**
 	 * An application shutting down the streams ({@link InputStream#close()} and
@@ -339,8 +247,8 @@ public class OBDCommandLooper {
 		/*
 		 * remove all callbacks from the executor
 		 */
-		commandExecutionHandler.removeCallbacks(initializationCommandsRunnable);
-		commandExecutionHandler.removeCallbacks(commonCommandsRunnable);
+		commandExecutor.removeCallbacks(initializationCommandsRunnable);
+		commandExecutor.removeCallbacks(commonCommandsRunnable);
 		
 		/*
 		 * if we were too often in the same phase (e.g. init),
@@ -361,12 +269,12 @@ public class OBDCommandLooper {
 			
 			setupAdapterCandidates();
 			
-			commandExecutionHandler.post(initializationCommandsRunnable);
+			commandExecutor.post(initializationCommandsRunnable);
 			break;
 		case COMMAND_EXECUTION:
 			this.connectionEstablished = true;
 			this.connectionListener.onConnectionVerified();
-			commandExecutionHandler.postDelayed(commonCommandsRunnable, requestPeriod);
+			commandExecutor.postDelayed(commonCommandsRunnable, requestPeriod);
 			commandListener.onConnected(deviceName);
 			
 			/*
@@ -380,8 +288,6 @@ public class OBDCommandLooper {
 		}
 	}
 
-
-
 	private void startMonitoring() {
 		if (this.monitor != null) {
 			this.monitor.running = false;
@@ -391,7 +297,6 @@ public class OBDCommandLooper {
 		new Thread(this.monitor).start();
 	}
 
-
 	private void setupAdapterCandidates() {
 		adapterCandidates.clear();
 		adapterCandidates.add(new ELM327Connector());
@@ -399,7 +304,6 @@ public class OBDCommandLooper {
 		adapterCandidates.add(new OBDLinkMXConnector());
 		adapterCandidates.add(new DriveDeckSportConnector());
 	}
-
 
 	private void connectionEstablished() {
 		logger.info("OBD Adapter " + this.obdAdapter.getClass().getName() +
@@ -410,7 +314,6 @@ public class OBDCommandLooper {
 		 */
 		switchPhase(Phase.COMMAND_EXECUTION, null);
 	}
-
 
 	private void selectAdapter() throws AllAdaptersFailedException {
 		if (this.obdAdapter == null) {
@@ -441,10 +344,123 @@ public class OBDCommandLooper {
 		if (this.obdAdapter != null) {
 			this.requestPeriod = this.obdAdapter.getPreferredRequestPeriod();
 			this.obdAdapter.provideStreamObjects(inputStream, outputStream);
-			this.obdAdapter.startExecutions(commandExecutionHandler);
+			this.obdAdapter.startExecutions(commandExecutor);
 		}
 	}
 
+	public void initialize(CommandExecutor exec) {
+		commandExecutor = exec;
+		switchPhase(Phase.INITIALIZATION, null);
+	}
+	
+	/**
+	 * This {@link Runnable} executes the init commands to establish
+	 * a connection to the adapter.
+	 */
+	private class InitializationCommandsRunnable implements Runnable {
+		
+		public void run() {
+			if (running && !connectionEstablished) {
+				/*
+				 * an async connector will probably only verify its connection
+				 * after one try cycle of executeInitializationRequests.
+				 */
+				if (obdAdapter != null && obdAdapter.connectionState() == ConnectionState.CONNECTED) {
+					connectionEstablished();
+					return;
+				}
+				
+				try {
+					selectAdapter();
+				} catch (AllAdaptersFailedException e) {
+					running = false;
+					connectionListener.onAllAdaptersFailed();
+					throw new LooperStoppedException();
+				}
+				
+				String stmt = "Trying "+obdAdapter.getClass().getSimpleName() +".";
+				logger.info(stmt);
+				connectionListener.onStatusUpdate(stmt);
+			
+				try {
+					executeInitializationRequests();
+				} catch (IOException e) {
+					running = false;
+					if (!userRequestedStop) {
+						connectionListener.requestConnectionRetry(e);
+					}
+					logger.info("Exiting commandHandler due to exception: "+e.getMessage(), e);
+					throw new LooperStoppedException();
+				} catch (AdapterFailedException e) {
+					logger.warn(e.getMessage(), e);
+				}
+				
+				/*
+				 * a sequential connector might already have a satisfied
+				 * connection
+				 */
+				if (obdAdapter != null && obdAdapter.connectionState() == ConnectionState.CONNECTED) {
+					connectionEstablished();
+					return;
+				}
+				
+				if (!running) {
+					logger.info("Exiting commandHandler.");
+					throw new LooperStoppedException();
+				}
+				
+				/*
+				 * no connection has been established, try again after the defined period
+				 */
+				commandExecutor.postDelayed(initializationCommandsRunnable, ADAPTER_TRY_PERIOD);
+			}
+			
+			if (!running) {
+				throw new LooperStoppedException();
+			}
+		}
+
+	}
+	
+	/**
+	 * This {@link Runnable} executes the data request command PIDs (e.g. speed, MAF, ...).
+	 */
+	private class CommonCommandsRunnable implements Runnable {
+		
+		public void run() {
+			if (!running) {
+				logger.info("Exiting commandHandler.");
+				throw new LooperStoppedException();
+			}
+			
+			try {
+				executeCommandRequests();
+			} catch (IOException e) {
+				running = false;
+				if (!userRequestedStop) {
+					connectionListener.requestConnectionRetry(e);
+				}
+				logger.info("Exiting commandHandler due to exception: "+e.getMessage(), e);
+				throw new LooperStoppedException();
+			}
+			
+			if (!running) {
+				logger.info("Exiting commandHandler.");
+				throw new LooperStoppedException();
+			}
+			
+			/*
+			 * post self again to the executor with the defined delay
+			 */
+			commandExecutor.postDelayed(commonCommandsRunnable, requestPeriod);
+		}
+	}
+	
+	/**
+	 * This {@link Runnable} checks the last timestamp of received
+	 * data. If it exceeds a certain time span, a reconnection attempt
+	 * is issued.
+	 */
 	private class MonitorRunnable implements Runnable {
 
 		private boolean running = true;
@@ -465,8 +481,8 @@ public class OBDCommandLooper {
 				 * check if we received data in the MAX_NODATA_TIME window
 				 */
 				if (System.currentTimeMillis() - lastSuccessfulCommandTime > MAX_NODATA_TIME) {
-					commandExecutionHandler.removeCallbacks(commonCommandsRunnable);
-					commandExecutionHandler.shutdownExecutions();
+					commandExecutor.removeCallbacks(commonCommandsRunnable);
+					commandExecutor.shutdownExecutions();
 					
 					if (OBDCommandLooper.this.obdAdapter != null) {
 						OBDCommandLooper.this.obdAdapter.shutdown();
@@ -478,11 +494,6 @@ public class OBDCommandLooper {
 			}
 		}
 		
-	}
-
-	public void initialize(CommandExecutor exec) {
-		commandExecutionHandler = exec;
-		switchPhase(Phase.INITIALIZATION, null);
 	}
 	
 }
