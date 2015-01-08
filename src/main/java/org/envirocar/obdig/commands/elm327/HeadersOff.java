@@ -24,16 +24,25 @@
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
  * PARTICULAR PURPOSE. See the GNU General Public License for more details.
  */
-package org.envirocar.app.test.commands.drivedeck;
+package org.envirocar.obdig.commands.elm327;
 
-import org.envirocar.obdig.protocol.adapter.ResponseParser;
-import org.envirocar.obdig.protocol.adapter.drivedeck.DriveDeckSportConnector;
 
-public class CommandTest {
+/**
+ * Turns off line-feed.
+ */
+public class HeadersOff extends ELM327Command {
 
-	protected ResponseParser getResponseParser() {
-		DriveDeckSportConnector conn = new DriveDeckSportConnector();
-		return conn.new LocalResponseParser();
+	/**
+	 * @param command
+	 */
+	public HeadersOff() {
+		super("AT H0");
 	}
-	
+
+
+	@Override
+	public String getCommandName() {
+		return "Disable Headers";
+	}
+
 }

@@ -24,27 +24,14 @@
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
  * PARTICULAR PURPOSE. See the GNU General Public License for more details.
  */
-package org.envirocar.obdig.commands.control;
+package org.envirocar.obdig.commands.elm327;
 
 import org.envirocar.obdig.commands.StringResultCommand;
 
+public abstract class ELM327Command extends StringResultCommand {
 
-/**
- * Turns off line-feed.
- */
-public class Defaults extends StringResultCommand {
-
-	/**
-	 * @param command
-	 */
-	public Defaults() {
-		super("AT D");
-	}
-
-
-	@Override
-	public String getCommandName() {
-		return "Defaults";
+	public ELM327Command(String command) {
+		super(command);
 	}
 
 }

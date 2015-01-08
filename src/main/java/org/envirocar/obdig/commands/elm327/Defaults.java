@@ -24,26 +24,25 @@
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
  * PARTICULAR PURPOSE. See the GNU General Public License for more details.
  */
-package org.envirocar.obdig.commands.control;
-
-import org.envirocar.obdig.commands.StringResultCommand;
+package org.envirocar.obdig.commands.elm327;
 
 
 /**
- * This command will turn-off echo.
+ * Turns off line-feed.
  */
-public class EchoOff extends StringResultCommand {
+public class Defaults extends ELM327Command {
 
 	/**
 	 * @param command
 	 */
-	public EchoOff() {
-		super("AT E0");
+	public Defaults() {
+		super("AT D");
 	}
+
 
 	@Override
 	public String getCommandName() {
-		return "Echo Off";
+		return "Defaults";
 	}
 
 }

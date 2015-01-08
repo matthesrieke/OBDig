@@ -26,37 +26,60 @@
  */
 package org.envirocar.obdig.commands;
 
-import org.envirocar.obdig.commands.PIDUtil;
+
 import org.envirocar.obdig.commands.PIDUtil.PID;
-import org.envirocar.obdig.commands.raw.FuelSystemStatus;
+import org.envirocar.obdig.commands.numeric.EngineLoad;
+import org.envirocar.obdig.commands.numeric.IntakePressure;
+import org.envirocar.obdig.commands.numeric.IntakeTemperature;
+import org.envirocar.obdig.commands.numeric.MAF;
+import org.envirocar.obdig.commands.numeric.RPM;
+import org.envirocar.obdig.commands.numeric.Speed;
+import org.envirocar.obdig.commands.numeric.TPS;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class FuelSystemStatusTest {
+public class ResponseByteTest {
 
+	
 	@Test
-	public void testCommandParsing() {
-		FuelSystemStatus cmd = (FuelSystemStatus) PIDUtil.instantiateCommand(PID.FUEL_SYSTEM_STATUS.toString());
-		
-		Assert.assertTrue(new String(cmd.getOutgoingBytes()).equals("01 ".concat(PID.FUEL_SYSTEM_STATUS.toString())));
-		Assert.assertTrue(PID.FUEL_SYSTEM_STATUS.toString().equals(cmd.getResponseTypeID()));
-		
-		cmd.parseRawData(createRawDataOpenLoop());
-		
-		Assert.assertTrue("Expected to be in open loop.", !cmd.isInClosedLoop());
-		
-		cmd = (FuelSystemStatus) PIDUtil.instantiateCommand(PID.FUEL_SYSTEM_STATUS.toString());
-		
-		cmd.parseRawData(createRawDataClosedLoop(cmd));
-		
-		Assert.assertTrue("Expected to be in closed loop.", cmd.isInClosedLoop());
-	}
-
-	private byte[] createRawDataClosedLoop(FuelSystemStatus cmd) {
-		return "41030100".getBytes();	}
-
-	private byte[] createRawDataOpenLoop() {
-		return "41030200".getBytes();
+	public void testEngineLoad() {
+		EngineLoad s = new EngineLoad();
+		Assert.assertTrue(s.getResponseTypeID().equals(PID.CALCULATED_ENGINE_LOAD.toString()));
 	}
 	
+	@Test
+	public void testIntakePressure() {
+		IntakePressure s = new IntakePressure();
+		Assert.assertTrue(s.getResponseTypeID().equals(PID.INTAKE_MAP.toString()));
+	}
+	
+	@Test
+	public void testIntakeTemp() {
+		IntakeTemperature s = new IntakeTemperature();
+		Assert.assertTrue(s.getResponseTypeID().equals(PID.INTAKE_AIR_TEMP.toString()));
+	}
+	
+	@Test
+	public void testMAF() {
+		MAF s = new MAF();
+		Assert.assertTrue(s.getResponseTypeID().equals(PID.MAF.toString()));
+	}
+	
+	@Test
+	public void testRPM() {
+		RPM s = new RPM();
+		Assert.assertTrue(s.getResponseTypeID().equals(PID.RPM.toString()));
+	}
+	
+	@Test
+	public void testSpeed() {
+		Speed s = new Speed();
+		Assert.assertTrue(s.getResponseTypeID().equals(PID.SPEED.toString()));
+	}
+	
+	@Test
+	public void testTPS() {
+		TPS s = new TPS();
+		Assert.assertTrue(s.getResponseTypeID().equals(PID.TPS.toString()));
+	}
 }

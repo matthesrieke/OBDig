@@ -24,26 +24,16 @@
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
  * PARTICULAR PURPOSE. See the GNU General Public License for more details.
  */
-package org.envirocar.obdig.commands.control;
+package org.envirocar.obdig.commands.drivedeck;
 
-import org.envirocar.obdig.commands.StringResultCommand;
+import org.envirocar.obdig.protocol.adapter.ResponseParser;
+import org.envirocar.obdig.protocol.adapter.drivedeck.DriveDeckSportConnector;
 
+public class CommandTest {
 
-/**
- * This command will turn-off echo.
- */
-public class SpacesOff extends StringResultCommand {
-
-	/**
-	 * @param command
-	 */
-	public SpacesOff() {
-		super("AT S0");
+	protected ResponseParser getResponseParser() {
+		DriveDeckSportConnector conn = new DriveDeckSportConnector();
+		return conn.new LocalResponseParser();
 	}
-
-	@Override
-	public String getCommandName() {
-		return "Spaces Off";
-	}
-
+	
 }

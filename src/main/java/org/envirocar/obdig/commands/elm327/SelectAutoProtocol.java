@@ -24,27 +24,25 @@
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
  * PARTICULAR PURPOSE. See the GNU General Public License for more details.
  */
-package org.envirocar.obdig.commands.control;
-
-import org.envirocar.obdig.commands.StringResultCommand;
+package org.envirocar.obdig.commands.elm327;
 
 
 /**
- * This command will turn-off memory.
+ * Select the protocol to use.
  */
-public class MemoryOff extends StringResultCommand {
+public class SelectAutoProtocol extends ELM327Command {
 
 	/**
 	 * @param command
 	 */
-	public MemoryOff() {
-		super("AT M0");
+	public SelectAutoProtocol() {
+		super("AT SP " + 0);
 	}
 
 
 	@Override
 	public String getCommandName() {
-		return "Memory Off";
+		return "Protocol: Auto";
 	}
 
 }

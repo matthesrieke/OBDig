@@ -24,27 +24,24 @@
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
  * PARTICULAR PURPOSE. See the GNU General Public License for more details.
  */
-package org.envirocar.obdig.commands.control;
-
-import org.envirocar.obdig.commands.StringResultCommand;
+package org.envirocar.obdig.commands.elm327;
 
 
 /**
- * Select the protocol to use.
+ * This command will turn-off echo.
  */
-public class SelectAutoProtocol extends StringResultCommand {
+public class SpacesOff extends ELM327Command {
 
 	/**
 	 * @param command
 	 */
-	public SelectAutoProtocol() {
-		super("AT SP " + 0);
+	public SpacesOff() {
+		super("AT S0");
 	}
-
 
 	@Override
 	public String getCommandName() {
-		return "Protocol: Auto";
+		return "Spaces Off";
 	}
 
 }

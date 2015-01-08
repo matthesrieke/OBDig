@@ -31,11 +31,11 @@ import java.util.List;
 
 import org.envirocar.obdig.commands.CommonCommand;
 import org.envirocar.obdig.commands.StringResultCommand;
-import org.envirocar.obdig.commands.control.EchoOff;
-import org.envirocar.obdig.commands.control.LineFeedOff;
-import org.envirocar.obdig.commands.control.ObdReset;
-import org.envirocar.obdig.commands.control.SelectAutoProtocol;
-import org.envirocar.obdig.commands.control.Timeout;
+import org.envirocar.obdig.commands.elm327.EchoOff;
+import org.envirocar.obdig.commands.elm327.LineFeedOff;
+import org.envirocar.obdig.commands.elm327.ObdReset;
+import org.envirocar.obdig.commands.elm327.SelectAutoProtocol;
+import org.envirocar.obdig.commands.elm327.Timeout;
 import org.envirocar.obdig.protocol.adapter.AbstractSequentialConnector;
 
 public class ELM327Connector extends AbstractSequentialConnector {

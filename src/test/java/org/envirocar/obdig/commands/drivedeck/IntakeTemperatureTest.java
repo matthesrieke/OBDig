@@ -24,26 +24,32 @@
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
  * PARTICULAR PURPOSE. See the GNU General Public License for more details.
  */
-package org.envirocar.obdig.commands.control;
+package org.envirocar.obdig.commands.drivedeck;
 
-import org.envirocar.obdig.commands.StringResultCommand;
+import org.envirocar.obdig.commands.CommonCommand;
+import org.envirocar.obdig.commands.numeric.IntakeTemperature;
+import org.envirocar.obdig.protocol.adapter.ResponseParser;
+import org.junit.Assert;
+import org.junit.Test;
 
-
-/**
- * Turns off line-feed.
- */
-public class LineFeedOff extends StringResultCommand {
-
-	/**
-	 * @param command
-	 */
-	public LineFeedOff() {
-		super("AT L0");
+public class IntakeTemperatureTest extends CommandTest {
+	
+	@Test
+	public void testParsing() {
+		ResponseParser parser = getResponseParser();
+		
+		byte[] bytes = createBytes();
+		CommonCommand resp = parser.processResponse(bytes, 0, bytes.length);
+		
+		Assert.assertTrue(resp != null && resp instanceof IntakeTemperature);
+		
+		double temp = ((IntakeTemperature) resp).getNumberResult().doubleValue();
+		Assert.assertTrue(temp == 23.0);
 	}
 
-	@Override
-	public String getCommandName() {
-		return "Line Feed Off";
+	private byte[] createBytes() {
+		return "B52<?0".getBytes();
 	}
+
 
 }

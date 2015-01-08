@@ -44,6 +44,9 @@ public class PIDSupportedTest {
 	public void testPIDSupportedParsing() {
 		PIDSupported cmd = new PIDSupported();
 		
+		Assert.assertTrue(new String(cmd.getOutgoingBytes()).equals("01 00"));
+		Assert.assertTrue("00".equals(cmd.getResponseTypeID()));
+		
 		cmd.parseRawData(createResponseMockup());
 		
 		Set<PID> result = cmd.getSupportedPIDs();
